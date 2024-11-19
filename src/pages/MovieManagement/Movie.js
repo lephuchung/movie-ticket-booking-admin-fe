@@ -1,58 +1,91 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTable } from 'react-table';
 import './Movie.scss';
 
 const Movie = () => {
-  const data = React.useMemo(
-    () => [
-      { id: 1, title: 'Avengers: Endgame', status: 'Đang chiếu' },
-      { id: 2, title: 'Inception', status: 'Kết thúc' },
-      { id: 3, title: 'The Dark Knight', status: 'Đang chiếu' },
-      { id: 4, title: 'Interstellar', status: 'Kết thúc' },
-    ],
-    []
-  );
+    const [data, setData] = useState([
+        { id: 1, title: 'Avengers: Endgame', status: 'Đang chiếu' },
+        { id: 2, title: 'Inception', status: 'Kết thúc' },
+        { id: 3, title: 'The Dark Knight', status: 'Đang chiếu' },
+        { id: 4, title: 'Interstellar', status: 'Kết thúc' },
+      ]);
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'STT',
-        accessor: (row, rowIndex) => rowIndex + 1,
-      },
-      {
-        Header: 'ID',
-        accessor: 'id',
-      },
-      {
-        Header: 'Tên Phim',
-        accessor: 'title',
-      },
-      {
-        Header: 'Trạng thái',
-        accessor: 'status',
-      },
-      {
-        Header: 'Hành động',
-        Cell: ({ row }) => (
-          <div>
-            <button onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
-            <button onClick={() => handleEdit(row.values.id)}>Sửa</button>
-            <button onClick={() => handleDelete(row.values.id)}>Xóa</button>
-          </div>
-        ),
-      },
-    ],
-    []
-  );
+    const columns = React.useMemo(
+        () => [
+        {
+            Header: 'STT',
+            accessor: (row, rowIndex) => rowIndex + 1,
+        },
+        {
+            Header: 'ID',
+            accessor: 'id',
+        },
+        {
+            Header: 'Tên Phim',
+            accessor: 'title',
+        },
+        {
+            Header: 'Trạng thái',
+            accessor: 'status',
+        },
+        {
+            Header: 'Hành động',
+            Cell: ({ row }) => (
+            <div>
+                <button onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
+                <button onClick={() => openEditPopup(row.original)}>Sửa</button>
+                <button onClick={() => handleDelete(row.values.id)}>Xóa</button>
+            </div>
+            ),
+        },
+        ],
+        []
+    );
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [editData, setEditData] = useState({ id: '', title: '', status: '' });
 
-  const handleDetails = (id) => alert(`Chi tiết cho phim ID: ${id}`);
-  const handleEdit = (id) => alert(`Sửa phim với ID: ${id}`);
-  const handleDelete = (id) => alert(`Xóa phim với ID: ${id}`);
+    const openEditPopup = (movie) => {
+        setEditData(movie);
+        setIsPopupOpen(true);
+    };
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  });
+    const closeEditPopup = () => {
+        setIsPopupOpen(false);
+        setEditData({ id: '', title: '', status: '' });
+    };
+
+
+    const handleDetails = (id) => alert(`Chi tiết cho phim ID: ${id}`);
+
+
+    const handleDelete = (id) => {
+        if (window.confirm(`Bạn có chắc muốn xóa phim với ID: ${id}?`)) {
+        setData(data.filter((item) => item.id !== id));
+        }
+    };
+
+    const handleSave = () => {
+        setData((prevData) =>
+        prevData.map((item) =>
+            item.id === editData.id ? { ...item, ...editData } : item
+        )
+        );
+        closeEditPopup();
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditData((prevData) => ({
+        ...prevData,
+        [name]: value,
+        }));
+    };
+
+    
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+        columns,
+        data,
+    });
 
   return (
     <div className='page-container'>
@@ -81,6 +114,44 @@ const Movie = () => {
                     })}
                     </tbody>
                 </table>
+                
+                {isPopupOpen && (
+                    <div className="popup">
+                        <div className="popup-content">
+                        <h2>Sửa Phim</h2>
+                        <form>
+                            <div className="form-group">
+                            <label>ID:</label>
+                            <input type="text" value={editData.id} disabled />
+                            </div>
+                            <div className="form-group">
+                            <label>Tên phim:</label>
+                            <input
+                                type="text"
+                                name="title"
+                                value={editData.title}
+                                onChange={handleInputChange}
+                            />
+                            </div>
+                            <div className="form-group">
+                            <label>Trạng thái:</label>
+                            <select
+                                name="status"
+                                value={editData.status}
+                                onChange={handleInputChange}
+                            >
+                                <option value="Đang chiếu">Đang chiếu</option>
+                                <option value="Kết thúc">Kết thúc</option>
+                            </select>
+                            </div>
+                            <div className="form-actions">
+                            <button type="button" onClick={handleSave}>Lưu</button>
+                            <button type="button" onClick={closeEditPopup}>Hủy</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                )}
             </div>
     </div>
   );
