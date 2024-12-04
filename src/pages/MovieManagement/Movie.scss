@@ -84,9 +84,15 @@
   
       &.delete {
         background-color: #e74c3c;
-  
+        
         &:hover {
           background-color: #c0392b;
+        }
+      }
+      &.add {
+        background-color: #4caf50;
+        &:hover {
+          background-color: #438f45;
         }
       }
     }
@@ -178,4 +184,29 @@
       margin-left: 20px;
     }
   }
-  
+  .add-movie-button {
+    position: fixed;
+    bottom: 40px; /* Cách đáy 20px */
+    right: 40px; /* Cách phải 20px */
+    background-color: #4caf50; /* Màu xanh lá */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 120px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-movie-button:hover {
+    transform: scale(1.1); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.add-movie-button:active {
+    transform: scale(0.95); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

@@ -144,6 +144,7 @@ const ShowtimeList = () => {
                     </div>
                 </div>
             )}
+            
         </div>
 
     )
