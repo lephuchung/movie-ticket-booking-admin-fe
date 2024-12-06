@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTable } from 'react-table';
 import './Movie.scss';
+import AddFilm from '../../component/Popup/AddFilm';
 
 const Movie = () => {
     const [data, setData] = useState([
@@ -33,24 +34,26 @@ const Movie = () => {
             Cell: ({ row }) => (
             <div>
                 <button onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
-                <button onClick={() => openEditPopup(row.original)}>Sửa</button>
-                <button onClick={() => handleDelete(row.values.id)}>Xóa</button>
+                <button className="edit" onClick={() => openEditPopup(row.original)}>Sửa</button>
+                <button className="delete" onClick={() => handleDelete(row.values.id)}>Xóa</button>
+                <button className="add" onClick={() => handleDelete(row.values.id)}>Tạo suất chiếu</button>
             </div>
             ),
         },
         ],
         []
     );
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
     const [editData, setEditData] = useState({ id: '', title: '', status: '' });
 
     const openEditPopup = (movie) => {
         setEditData(movie);
-        setIsPopupOpen(true);
+        setIsEditPopupOpen(true);
     };
 
     const closeEditPopup = () => {
-        setIsPopupOpen(false);
+        setIsEditPopupOpen(false);
         setEditData({ id: '', title: '', status: '' });
     };
 
@@ -80,7 +83,9 @@ const Movie = () => {
         [name]: value,
         }));
     };
-
+    const handleAddFilm = (filmData) => {
+        console.log('Dữ liệu phim mới:', filmData);
+    };
     
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
@@ -114,8 +119,15 @@ const Movie = () => {
                     })}
                     </tbody>
                 </table>
-                
-                {isPopupOpen && (
+                <button className="add-movie-button" onClick={() => setIsAddPopupOpen(true)}>
+                    + Tạo Phim
+                </button>
+                <AddFilm
+                        isOpen={isAddPopupOpen}
+                        onClose={() => setIsAddPopupOpen(false)}
+                        onSubmit={handleAddFilm}
+                />
+                {isEditPopupOpen && (
                     <div className="popup">
                         <div className="popup-content">
                         <h2>Sửa Phim</h2>
