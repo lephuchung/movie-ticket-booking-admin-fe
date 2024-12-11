@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './Movie.scss';
 import AddFilm from '../../component/Popup/AddFilm';
+import { fetchNowShowing } from '../../apis/fetchNowShowing';
 
 const Movie = () => {
-    const [data, setData] = useState([
-        { id: 1, title: 'Avengers: Endgame', status: 'Đang chiếu' },
-        { id: 2, title: 'Inception', status: 'Kết thúc' },
-        { id: 3, title: 'The Dark Knight', status: 'Đang chiếu' },
-        { id: 4, title: 'Interstellar', status: 'Kết thúc' },
-      ]);
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const movies = await fetchNowShowing(); 
+                const formattedData = movies.map((movie) => ({
+                    id: movie.MovieId, 
+                    title: movie.Title,
+                    status: 'Đang chiếu',
+                }));
+                setData(formattedData);
+            } catch (err) {
+                console.error('Error fetching movies:', err);
+                setError('Lỗi khi tải dữ liệu phim.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
     const columns = React.useMemo(
         () => [
         {
