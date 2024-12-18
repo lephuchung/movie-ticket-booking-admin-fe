@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTable } from 'react-table';
 
 const AccountManager = () => {
@@ -8,7 +8,10 @@ const AccountManager = () => {
         { id: 3, username: 'Shizuka', email: 'shizuka@gmail.com', role: 'User' },
         { id: 4, username: 'Chaien', email: 'chaien@gmail.com', role: 'Admin' },
       ];
-    
+
+    const [data, setData] = useState(initialData);
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+
     const columns = React.useMemo(
         () => [
           { Header: 'STT', accessor: (row, rowIndex) => rowIndex + 1 },
@@ -61,6 +64,48 @@ const AccountManager = () => {
             </tbody>
         </table>
 
+        {isEditPopupOpen && (
+        <div className="popup">
+          <div className="popup-content">
+            <h2>Sửa Tài Khoản</h2>
+            <form>
+              <div className="form-group">
+                <label>ID:</label>
+                <input type="text" value={editData.id} disabled />
+              </div>
+              <div className="form-group">
+                <label>Tên tài khoản:</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={editData.username}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={editData.email}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Quyền:</label>
+                <select name="role" value={editData.role} onChange={handleInputChange}>
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                </select>
+              </div>
+              <div className="form-actions">
+                <button type="button" onClick={handleSave}>Lưu</button>
+                <button type="button" onClick={closeEditPopup}>Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        )}
     </div>
   );
 };
