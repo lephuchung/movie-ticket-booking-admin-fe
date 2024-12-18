@@ -156,29 +156,4 @@
     }
 }
 
-.add-account-button {
-    position: fixed;
-    bottom: 40px;
-    right: 40px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    width: 120px;
-    height: 30px;
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    &:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    &:active {
-        transform: scale(0.95);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-}
