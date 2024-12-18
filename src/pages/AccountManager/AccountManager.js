@@ -11,16 +11,22 @@ const AccountManager = () => {
 
     const [data, setData] = useState(initialData);
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-
+    const [editData, setEditData] = useState({ id: '', username: '', email: '', role: '' });
+    
     const openEditPopup = (account) => {
         setEditData(account);
         setIsEditPopupOpen(true);
-      };
+    };
     
-      const closeEditPopup = () => {
+    const closeEditPopup = () => {
         setIsEditPopupOpen(false);
         setEditData({ id: '', username: '', email: '', role: '' });
-      };
+    };
+    const handleDelete = (id) => {
+        if (window.confirm(`Bạn có chắc muốn xóa tài khoản với ID: ${id}?`)) {
+          setData(data.filter((item) => item.id !== id));
+        }
+    };
 
     const columns = React.useMemo(
         () => [
