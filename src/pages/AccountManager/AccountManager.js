@@ -12,6 +12,16 @@ const AccountManager = () => {
     const [data, setData] = useState(initialData);
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
+    const openEditPopup = (account) => {
+        setEditData(account);
+        setIsEditPopupOpen(true);
+      };
+    
+      const closeEditPopup = () => {
+        setIsEditPopupOpen(false);
+        setEditData({ id: '', username: '', email: '', role: '' });
+      };
+
     const columns = React.useMemo(
         () => [
           { Header: 'STT', accessor: (row, rowIndex) => rowIndex + 1 },
