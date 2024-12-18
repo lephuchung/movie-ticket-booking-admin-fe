@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTable } from 'react-table';
+import './AccountManager.scss';
 
 const AccountManager = () => {
     const initialData = [
