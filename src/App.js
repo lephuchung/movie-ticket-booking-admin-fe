@@ -6,6 +6,7 @@ import Sidebar from './component/Sidebar/Sidebar';
 import Movie from './pages/MovieManagement/Movie';
 import Home from './pages/Home/Home';
 import NotFound from './pages/NotFound/NotFound';
+import AccountManager from './pages/AccountManager/AccountManager'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route path='/movie' element={<Movie />} />
               <Route path='/' element={<Home />} />
               <Route path='*' element={<NotFound />} />
+              <Route path='/account' element={<AccountManager />} />
             </Routes>
           </div>
 
