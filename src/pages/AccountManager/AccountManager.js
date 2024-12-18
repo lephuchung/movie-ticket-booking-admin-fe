@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useTable } from 'react-table';
 
 const AccountManager = () => {
     const initialData = [
@@ -9,7 +9,7 @@ const AccountManager = () => {
         { id: 4, username: 'Chaien', email: 'chaien@gmail.com', role: 'Admin' },
       ];
     
-      const columns = React.useMemo(
+    const columns = React.useMemo(
         () => [
           { Header: 'STT', accessor: (row, rowIndex) => rowIndex + 1 },
           { Header: 'ID', accessor: 'id' },
@@ -28,9 +28,39 @@ const AccountManager = () => {
         ],
         []
       );
+
+      const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+        columns,
+        data,
+      });
+
   return (
     <div className="account-manager">
-      
+        <h1 className="title">Quản lý tài khoản</h1>
+        <table {...getTableProps()} className="account-table">
+            <thead>
+            {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                ))}
+                </tr>
+            ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+                prepareRow(row);
+                return (
+                <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    ))}
+                </tr>
+                );
+            })}
+            </tbody>
+        </table>
+
     </div>
   );
 };
