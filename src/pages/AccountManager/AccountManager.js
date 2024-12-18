@@ -3,10 +3,10 @@ import React from 'react';
 
 const AccountManager = () => {
     const initialData = [
-        { id: 1, username: 'nguyenvana', email: 'nguyenvana@gmail.com', role: 'Admin' },
-        { id: 2, username: 'tranthib', email: 'tranthib@gmail.com', role: 'User' },
-        { id: 3, username: 'phamc', email: 'phamc@yahoo.com', role: 'User' },
-        { id: 4, username: 'lequangd', email: 'lequangd@hotmail.com', role: 'Admin' },
+        { id: 1, username: 'Doraemon', email: 'doraemon@gmail.com', role: 'Admin' },
+        { id: 2, username: 'Nobita', email: 'nobita@gmail.com', role: 'User' },
+        { id: 3, username: 'Shizuka', email: 'shizuka@gmail.com', role: 'User' },
+        { id: 4, username: 'Chaien', email: 'chaien@gmail.com', role: 'Admin' },
       ];
     
       const columns = React.useMemo(
