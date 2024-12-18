@@ -28,6 +28,24 @@ const AccountManager = () => {
         }
     };
 
+    const handleSave = () => {
+        setData((prevData) =>
+        prevData.map((item) =>
+            item.id === editData.id ? { ...item, ...editData } : item
+        )
+        );
+        closeEditPopup();
+    };
+
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditData((prevData) => ({
+        ...prevData,
+        [name]: value,
+        }));
+    };
+
     const columns = React.useMemo(
         () => [
           { Header: 'STT', accessor: (row, rowIndex) => rowIndex + 1 },
