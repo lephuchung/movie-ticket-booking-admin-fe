@@ -6,8 +6,8 @@ const PaymentManager = () => {
   return (
     <div className="page-container">
       <h1 className="page-title">Quản lý thanh toán</h1>
-      <div>
-        <table>
+      <div className="page-main-content">
+        <table className="payment-table">
           <thead>
             <tr>
               <th>STT</th>
@@ -28,6 +28,7 @@ const PaymentManager = () => {
                 <td>{item.status}</td>
                 <td>
                   <button
+                    className="delete"
                     onClick={() => handleDelete(item.id)}
                   >
                     Xóa
