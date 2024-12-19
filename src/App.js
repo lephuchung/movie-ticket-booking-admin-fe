@@ -7,6 +7,7 @@ import Movie from './pages/MovieManagement/Movie';
 import Home from './pages/Home/Home';
 import NotFound from './pages/NotFound/NotFound';
 import AccountManager from './pages/AccountManager/AccountManager'
+import PaymentManager from './pages/PaymentManager/PaymentManager'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path='/' element={<Home />} />
               <Route path='*' element={<NotFound />} />
               <Route path='/account' element={<AccountManager />} />
+              <Route path='/payment' element={<PaymentManager />} />
             </Routes>
           </div>
 

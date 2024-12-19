@@ -9,6 +9,7 @@ const Sidebar = () => {
             <NavLink to={"/showtime"}>Quản lý suất chiếu</NavLink>
             <NavLink to={"/movie"}>Quản lý phim</NavLink>
             <NavLink to={"/account"}>Quản lý tài khoản</NavLink>
+            <NavLink to={"/payment"}>Quản lý thanh toán</NavLink>
         </div>
     )
 }
