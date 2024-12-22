@@ -112,7 +112,7 @@ const Movie = () => {
     });
 
   return (
-    <div className='page-container'>
+    <div className='page-container-movie'>
             <h1 className='page-title'>Quản lý phim</h1>
             <div className='page-main-content'>
                 <table {...getTableProps()} className="movie-table">
