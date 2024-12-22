@@ -36,7 +36,7 @@ const ShowtimeList = () => {
                 Header: 'Hành Động',
                 Cell: ({ row }) => (
                     <div>
-                        <button onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
+                        <button className="detail"onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
                         <button className="edit" onClick={() => handleEdit(row.values.id)}>Sửa</button>
                         <button className="delete" onClick={() => handleDelete(row.values.id)}>Xóa</button>
                     </div>
@@ -82,7 +82,6 @@ const ShowtimeList = () => {
       });
     return (
         <div>
-            <div>ShowtimeList</div>
             <table {...getTableProps()} className="showtime-table">
                 <thead>
                     {headerGroups.map(headerGroup => (

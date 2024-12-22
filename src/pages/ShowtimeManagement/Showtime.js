@@ -5,10 +5,9 @@ import ShowtimeFilter from '../../component/ShowtimeFilter/ShowtimeFilter'
 
 const Showtime = () => {
     return (
-        <div className='page-container'>
+        <div className='page-container-showtime'>
             <h1 className='page-title'>Quản lý suất chiếu</h1>
             <div className='page-main-content'>
-                <ShowtimeFilter />
                 <ShowtimeList />
             </div>
         </div>

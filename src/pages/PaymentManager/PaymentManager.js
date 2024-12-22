@@ -33,9 +33,16 @@ const PaymentManager = () => {
           setData(data.filter((item) => item.id !== id));
         }
         };
+    const handlePayment = (id) => {
+        setData(data.map(item =>
+            item.id === id
+            ? { ...item, status: 'Đã thanh toán' }
+            : item
+            ));
+          };
 
   return (
-    <div className="page-container">
+    <div className="page-container-payment">
         <h1 className="page-title">Quản lý thanh toán</h1>
         <div className="page-main-content">
             <table className="payment-table">
@@ -62,6 +69,14 @@ const PaymentManager = () => {
                     <td>{item.amount}</td>
                     <td>{item.status}</td>
                     <td>
+                    {item.status === 'Chưa thanh toán' && (
+                    <button
+                      className="payment"
+                      onClick={() => handlePayment(item.id)}
+                    >
+                      Thanh toán
+                    </button>
+                  )}
                     <button
                         className="delete"
                         onClick={() => handleDelete(item.id)}

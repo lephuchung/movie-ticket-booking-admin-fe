@@ -58,7 +58,7 @@ const AccountManager = () => {
             Header: 'Hành động',
             Cell: ({ row }) => (
               <div>
-                <button onClick={() => openEditPopup(row.original)}>Sửa</button>
+                <button className="edit" onClick={() => openEditPopup(row.original)}>Sửa</button>
                 <button className="delete" onClick={() => handleDelete(row.original.id)}>Xóa</button>
               </div>
             ),
@@ -73,8 +73,9 @@ const AccountManager = () => {
       });
 
   return (
-    <div className="account-manager">
-        <h1 className="title">Quản lý tài khoản</h1>
+    <div className='page-container-acc'>
+        <h1 className='page-title'>Quản lý tài khoản</h1>
+        <div className='page-main-content'>
         <table {...getTableProps()} className="account-table">
             <thead>
             {headerGroups.map((headerGroup) => (
@@ -141,6 +142,7 @@ const AccountManager = () => {
           </div>
         </div>
         )}
+        </div>
     </div>
   );
 };
