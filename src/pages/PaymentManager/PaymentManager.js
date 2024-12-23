@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './PaymentManager.scss';
-import { fetchPayment } from '../../apis/fetchPayment';
+import { fetchPayment, deletePayment } from '../../apis/fetchPayment';
 
 const PaymentManager = () => {
     const [data, setData] = useState([]);

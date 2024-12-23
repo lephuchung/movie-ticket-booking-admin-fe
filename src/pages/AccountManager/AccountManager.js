@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './AccountManager.scss';
-import { fetchUser } from '../../apis/fetchUser'; 
+import { fetchUser, deleteUser } from '../../apis/fetchUser'; 
 
 const AccountManager = () => {
     const [data, setData] = useState([]);
@@ -32,11 +32,20 @@ const AccountManager = () => {
         fetchData();
     }, []); 
 
-    const handleDelete = (id) => {
-        if (window.confirm(`Bạn có chắc muốn xóa tài khoản với ID: ${id}?`)) {
-            setData(data.filter((item) => item.id !== id));
-        }
+    const handleDelete = async (id) => {
+      if (window.confirm(`Bạn có chắc muốn xóa tài khoản với ID: ${id}?`)) {
+          try {
+              await deleteUser(id);
+              setData((prevData) => prevData.filter((item) => item.id !== id));
+  
+              alert('Xóa tài khoản thành công!');
+          } catch (err) {
+              console.error('Lỗi khi xóa tài khoản:', err);
+              alert('Xóa tài khoản thất bại. Vui lòng thử lại.');
+          }
+      }
     };
+  
 
     const columns = React.useMemo(
         () => [
