@@ -1,5 +1,5 @@
 import { fetchData } from '../customHook/callApi';
 
 export const fetchNowShowing = async () => {
-    return fetchData('/movies/now_showing');
+    return fetchData('/api/v1/movies');
 };

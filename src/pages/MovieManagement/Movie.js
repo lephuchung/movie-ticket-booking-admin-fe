@@ -17,7 +17,8 @@ const Movie = () => {
                 const formattedData = movies.map((movie) => ({
                     id: movie.MovieId, 
                     title: movie.Title,
-                    status: 'Đang chiếu',
+                    releaseDate: new Date(movie.ReleaseDate).toLocaleDateString('vi-VN'),
+                    rating: movie.Rating,
                 }));
                 setData(formattedData);
             } catch (err) {
@@ -45,14 +46,18 @@ const Movie = () => {
             accessor: 'title',
         },
         {
-            Header: 'Trạng thái',
-            accessor: 'status',
+            Header: 'Ra mắt',
+            accessor: 'releaseDate',
+        },
+        {
+            Header: 'Đánh giá',
+            accessor: 'rating',
         },
         {
             Header: 'Hành động',
             Cell: ({ row }) => (
             <div>
-                <button onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
+                <button className="detail" onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
                 <button className="edit" onClick={() => openEditPopup(row.original)}>Sửa</button>
                 <button className="delete" onClick={() => handleDelete(row.values.id)}>Xóa</button>
                 <button className="add" onClick={() => handleDelete(row.values.id)}>Tạo suất chiếu</button>
