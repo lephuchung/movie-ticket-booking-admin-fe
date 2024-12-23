@@ -71,6 +71,13 @@
       &:active {
         background-color: #1d6fa5;
       }
+      &.detail{
+        background-color: #dad00d;
+
+        &:hover {
+          background-color: #c9ac09;
+        }
+      }
   
       &.edit {
         background-color: #f39c12;
