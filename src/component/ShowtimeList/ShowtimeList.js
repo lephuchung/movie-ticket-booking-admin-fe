@@ -82,7 +82,7 @@ const ShowtimeList = () => {
                     <div>
                         <button className="detail" onClick={() => handleDetails(row.original)}>Chi tiết</button>
                         <button className="edit" onClick={() => handleEdit(row.original)}>Sửa</button>
-                        <button className="delete" onClick={() => handleDelete(row.original)}>Xóa</button>
+                        {/* <button className="delete" onClick={() => handleDelete(row.original)}>Xóa</button> */}
                     </div>
                 ),
             },

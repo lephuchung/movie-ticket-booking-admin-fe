@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './PaymentManager.scss';
 import { fetchPayment, deletePayment } from '../../apis/fetchPayment';
+import { fetchUser } from '../../apis/fetchUser';
+import { MdDeleteOutline } from "react-icons/md";
+import { FaPlusCircle } from "react-icons/fa";
 
 const PaymentManager = () => {
     const [data, setData] = useState([]);
@@ -11,15 +14,26 @@ const PaymentManager = () => {
     useEffect(() => {
         const getPayments = async () => {
             try {
-                const response = await fetchPayment();
-                const formattedData = response.map(item => ({
+                const paymentResponse = await fetchPayment();
+                const userResponse = await fetchUser(); // Fetch dữ liệu user
+
+                // Tạo map UserId -> Name 
+                const userMap = {};
+                userResponse.forEach(user => {
+                    userMap[user.UserId] = user.Name;
+                });
+
+                // Format dữ liệu payment và thêm tên khách hàng
+                const formattedData = paymentResponse.map(item => ({
                     PaymentId: item.PaymentId,
                     PaymentStatus: item.PaymentStatus === 'completed' ? 'Đã thanh toán' : 'Chưa thanh toán',
                     Amount: formatAmount(item.Amount),
                     PaymentTime: formatDate(item.PaymentTime),
                     PaymentMethod: item.PaymentMethod,
+                    CustomerName: userMap[item.UserId] || 'Không rõ', // Lấy tên khách hàng từ UserId
                 }));
-                setData(formattedData); // Format lại dữ liệu
+
+                setData(formattedData); // Gán dữ liệu đã format vào state
                 setLoading(false);
             } catch (err) {
                 setError('Lỗi khi tải dữ liệu thanh toán');
@@ -50,6 +64,13 @@ const PaymentManager = () => {
         ));
     };
 
+    // Xử lý xóa thanh toán
+    const handleDelete = (id) => {
+        if (window.confirm(`Bạn có chắc muốn xóa giao dịch với ID: ${id}?`)) {
+            setData(data.filter((item) => item.PaymentId !== id));
+        }
+    };
+
     const columns = React.useMemo(
         () => [
             {
@@ -59,6 +80,10 @@ const PaymentManager = () => {
             {
                 Header: 'ID',
                 accessor: 'PaymentId',
+            },
+            {
+                Header: 'Tên khách hàng',
+                accessor: 'CustomerName', // Truy cập CustomerName từ dữ liệu
             },
             {
                 Header: 'Số tiền',
@@ -86,24 +111,14 @@ const PaymentManager = () => {
                             </button>
                         )}
                         <button className="delete" onClick={() => handleDelete(row.values.PaymentId)}>
-                            Xóa
+                            <MdDeleteOutline />
                         </button>
                     </div>
                 ),
             },
         ],
-        [data] 
+        [data] // Columns phụ thuộc vào dữ liệu
     );
-
-    const handleDelete = (id) => {
-        if (window.confirm(`Bạn có chắc muốn xóa giao dịch với ID: ${id}?`)) {
-            setData(data.filter((item) => item.PaymentId !== id));
-        }
-    };
-
-    const handleDetails = (id) => {
-        alert(`Chi tiết thanh toán cho ID: ${id}`);
-    };
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
@@ -141,6 +156,9 @@ const PaymentManager = () => {
                     </tbody>
                 </table>
             </div>
+            <button className="add-payment-button">
+                <FaPlusCircle />
+            </button>
         </div>
     );
 };

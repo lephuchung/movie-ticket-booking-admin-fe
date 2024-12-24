@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './AccountManager.scss';
 import { fetchUser, deleteUser } from '../../apis/fetchUser'; 
+import { MdDeleteOutline } from "react-icons/md";
 
 const AccountManager = () => {
     const [data, setData] = useState([]);
@@ -86,7 +87,7 @@ const AccountManager = () => {
                 Cell: ({ row }) => (
                     <div>
                         <button className="delete" onClick={() => handleDelete(row.original.id)}>
-                            Xóa
+                            <MdDeleteOutline />
                         </button>
                     </div>
                 ),
