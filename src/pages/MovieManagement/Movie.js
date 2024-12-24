@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './Movie.scss';
 import AddFilm from '../../component/Popup/AddFilm';
+import AddShow from '../../component/Popup/AddShow';
+
 import { fetchNowShowing } from '../../apis/fetchNowShowing';
 
 const Movie = () => {
