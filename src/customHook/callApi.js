@@ -30,3 +30,13 @@ export const deleteData = async (link) => {
         throw error;
     }
 };
+
+export const createData = async (link, data) => {
+    try {
+        const response = await axios.post(`${API_URL}${link}`, data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error creating data at ${link}: ${error}`);
+        throw error;
+    }
+};

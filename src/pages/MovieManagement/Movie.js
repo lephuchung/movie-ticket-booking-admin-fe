@@ -3,13 +3,18 @@ import { useTable } from 'react-table';
 import './Movie.scss';
 import AddFilm from '../../component/Popup/AddFilm';
 import AddShow from '../../component/Popup/AddShow';
-
 import { fetchNowShowing } from '../../apis/fetchNowShowing';
 
 const Movie = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
+    const [isAddShowPopupOpen, setIsAddShowPopupOpen] = useState(false);
+    const [editData, setEditData] = useState({ id: '', title: '', status: '' });
+    const [currentMovieId, setCurrentMovieId] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,16 +67,13 @@ const Movie = () => {
                 <button className="detail" onClick={() => handleDetails(row.values.id)}>Chi tiết</button>
                 <button className="edit" onClick={() => openEditPopup(row.original)}>Sửa</button>
                 <button className="delete" onClick={() => handleDelete(row.values.id)}>Xóa</button>
-                <button className="add" onClick={() => handleDelete(row.values.id)}>Tạo suất chiếu</button>
+                <button className="add" onClick={() => handleAddShow(row.values.id)}>Tạo suất chiếu</button>
             </div>
             ),
         },
         ],
         []
     );
-    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
-    const [editData, setEditData] = useState({ id: '', title: '', status: '' });
 
     const openEditPopup = (movie) => {
         setEditData(movie);
@@ -111,6 +113,16 @@ const Movie = () => {
     };
     const handleAddFilm = (filmData) => {
         console.log('Dữ liệu phim mới:', filmData);
+    };
+
+    const handleAddShow = (movieId) => {
+        setCurrentMovieId(movieId);
+        setIsAddShowPopupOpen(true);
+    };
+
+    const handleAddShowSubmit = (showData) => {
+        console.log('Dữ liệu suất chiếu mới:', { ...showData, movieId: currentMovieId });
+        setIsAddShowPopupOpen(false);
     };
     
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -189,6 +201,14 @@ const Movie = () => {
                         </form>
                         </div>
                     </div>
+                )}
+                {isAddShowPopupOpen && (
+                    <AddShow
+                        isOpen={isAddShowPopupOpen}
+                        onClose={() => setIsAddShowPopupOpen(false)}
+                        onSubmit={handleAddShowSubmit}
+                        movieId={currentMovieId} 
+                    />
                 )}
             </div>
     </div>

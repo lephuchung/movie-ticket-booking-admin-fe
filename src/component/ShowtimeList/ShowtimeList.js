@@ -127,14 +127,15 @@ const ShowtimeList = () => {
     };
 
     const handleDelete = async (row) => {
-        console.log('BDeleta movie:', row);
+        console.log('Deleta movie:', row);
         if (window.confirm(`Bạn có chắc muốn xóa suất chiếu của phim "${row.title}" không?`)) {
             try {
                 // Gọi API xóa dữ liệu
                 await deleteShowtime(row.id);
                 
                 // Cập nhật lại dữ liệu sau khi xóa
-                setData(data.filter((item) => item.id !== row.id));
+                setData((prevData) => prevData.filter((item) => item.id !== row.id));
+                setShowtimes((prevShowtimes) => prevShowtimes.filter((item) => item.id !== row.id));
             } catch (error) {
                 alert('Xóa thất bại. Vui lòng thử lại.');
             }
