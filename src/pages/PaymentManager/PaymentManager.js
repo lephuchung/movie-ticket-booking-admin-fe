@@ -101,21 +101,21 @@ const PaymentManager = () => {
                 Header: 'Phương thức thanh toán',
                 accessor: 'PaymentMethod',
             },
-            {
-                Header: 'Hành động',
-                Cell: ({ row }) => (
-                    <div>
-                        {row.values.PaymentStatus === 'Chưa thanh toán' && (
-                            <button className="payment" onClick={() => handlePayment(row.values.PaymentId)}>
-                                Thanh toán
-                            </button>
-                        )}
-                        <button className="delete" onClick={() => handleDelete(row.values.PaymentId)}>
-                            <MdDeleteOutline />
-                        </button>
-                    </div>
-                ),
-            },
+            // {
+            //     Header: 'Hành động',
+            //     Cell: ({ row }) => (
+            //         <div>
+            //             {row.values.PaymentStatus === 'Chưa thanh toán' && (
+            //                 <button className="payment" onClick={() => handlePayment(row.values.PaymentId)}>
+            //                     Thanh toán
+            //                 </button>
+            //             )}
+            //             <button className="delete" onClick={() => handleDelete(row.values.PaymentId)}>
+            //                 <MdDeleteOutline />
+            //             </button>
+            //         </div>
+            //     ),
+            // },
         ],
         [data] // Columns phụ thuộc vào dữ liệu
     );

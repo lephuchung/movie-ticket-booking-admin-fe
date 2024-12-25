@@ -77,12 +77,19 @@ const AccountManager = () => {
         console.log("updatedAccount:", updatedAccount);
         try {
             // Chuyển đổi dữ liệu về định dạng mới
+            const createdAtUTC = new Date(updatedAccount.createdAt); // Chuyển đổi thành đối tượng Date
+            const createdAtWith7Hours = new Date(createdAtUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ
+    
+            // Định dạng lại createdAt theo chuẩn ISO hoặc theo định dạng bạn muốn
+            const formattedCreatedAt = createdAtWith7Hours.toISOString(); // Nếu muốn chuẩn ISO
+            // const formattedCreatedAt = createdAtWith7Hours.toLocaleString('vi-VN'); // Hoặc định dạng theo 'vi-VN' nếu cần
+    
             const formattedAccount = {
                 Name: updatedAccount.name,
                 Email: updatedAccount.email,
                 Phone: updatedAccount.phone,
                 Role: updatedAccount.role,
-                CreateAt: updatedAccount.createdAt,
+                CreateAt: formattedCreatedAt, // Gửi thời gian đã format
                 Status: updatedAccount.status,
                 Password: updatedAccount.password,
             };
@@ -91,6 +98,7 @@ const AccountManager = () => {
     
             // Cập nhật thông tin tài khoản qua API
             await updateUser(updatedAccount.id, formattedAccount);  
+            window.location.reload();
     
             // Cập nhật lại dữ liệu bảng
             setData((prevData) =>
@@ -107,6 +115,7 @@ const AccountManager = () => {
             alert('Cập nhật tài khoản thất bại.');
         }
     };
+    
 
     const columns = React.useMemo(
         () => [

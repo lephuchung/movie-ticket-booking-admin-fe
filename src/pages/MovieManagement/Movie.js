@@ -30,7 +30,7 @@ const Movie = () => {
                     title: movie.Title,
                     description: movie.Description,
                     genre: movie.Genre,
-                    releaseDate: movie.ReleaseDate.toLocaleString('vi-VN'), 
+                    releaseDate: movie.ReleaseDate, 
                     rating: movie.Rating,
                     duration: movie.Duration,
                     director: movie.Director,
@@ -66,12 +66,11 @@ const Movie = () => {
             Header: 'Ra mắt',
             accessor: 'releaseDate',
             Cell: ({ value }) => {
+            
                 const releaseDateUTC = new Date(value); // Chuyển chuỗi ISO thành đối tượng Date
-                const releaseDateUTC7 = new Date(releaseDateUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ để chuyển sang UTC+7
 
-                // Định dạng lại thành ngày/giờ (VD: 25/04/2019 17:00)
-                const formattedDate = releaseDateUTC7.toLocaleDateString('vi-VN'); // Chỉ lấy ngày
-                const formattedTime = releaseDateUTC7.toLocaleTimeString('vi-VN').slice(0, 5); // Chỉ lấy giờ
+                const formattedDate = releaseDateUTC.toLocaleDateString('vi-VN'); // Chỉ lấy ngày
+                const formattedTime = releaseDateUTC.toLocaleTimeString('vi-VN').slice(0, 5); // Chỉ lấy giờ
 
                 return `${formattedDate} ${formattedTime}`;
             },
@@ -148,17 +147,21 @@ const Movie = () => {
     };
 
     const handleSave = async () => {
+        console.log("editdata",editData)
         try {
+            const releaseDateUTC = new Date(editData.releaseDate); // Chuyển thành đối tượng Date
+        const releaseDateWith7Hours = new Date(releaseDateUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ
             const updatedMovie = {
                 Title: editData.title,
                 Description: editData.description,
                 Genre: editData.genre,
-                ReleaseDate: editData.releaseDate,
+                ReleaseDate: releaseDateWith7Hours.toISOString(),
                 Rating: editData.rating,
                 Duration: editData.duration,
                 Director: editData.director,
                 PosterUrl: editData.posterUrl,
             };
+            console.log("dâtguirdi",updatedMovie)
             await updateNowShowing(editData.id, updatedMovie);
             setData((prevData) => {
                 const updatedData = prevData.map((item) =>

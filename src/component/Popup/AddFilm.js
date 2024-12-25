@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import './AddFilm.scss';
-import { createNowShowing } from '../../apis/fetchNowShowing'; // Import API createNowShowing
+import { createNowShowing } from '../../apis/fetchNowShowing'; 
 
 const AddFilm = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
-        Title: '',           // Đổi thành Title thay vì title
-        Description: '',     // Đổi thành Description thay vì description
-        Genre: '',           // Đổi thành Genre thay vì genre
-        ReleaseDate: '',     // Đổi thành ReleaseDate thay vì releaseDateTime
-        Rating: '',          // Đổi thành Rating thay vì rating
-        Duration: '',        // Đổi thành Duration thay vì duration
-        Director: '',        // Đổi thành Director thay vì director
-        PosterUrl: '',       // Đổi thành PosterUrl thay vì posterUrl
+        Title: '',           
+        Description: '',     
+        Genre: '',           
+        ReleaseDate: '',    
+        Rating: '',          
+        Duration: '',     
+        Director: '',       
+        PosterUrl: '',      
     });
 
     const handleChange = (e) => {
@@ -24,7 +24,7 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
 
         // Chuyển ReleaseDate sang định dạng ISO 8601 trước khi gửi lên API
         const { ReleaseDate, ...rest } = formData;
-        const releaseDate = new Date(ReleaseDate).toISOString(); // Chuyển đổi thành ISO string
+        const releaseDate = ReleaseDate; // Chuyển đổi thành ISO string
 
         // Gửi dữ liệu lên API createNowShowing
         try {
