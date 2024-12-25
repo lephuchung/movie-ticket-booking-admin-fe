@@ -4,15 +4,17 @@
     height: 100%;
     flex-direction: column;
 
+
     .page-title {
         width: 100%;
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 600;
         color: #493d3d;
         text-align: left;
     }
 
     .page-main-content {
+        font-size: 14px;
         width: 100%;
         height: 100%;
         display: flex;
@@ -20,12 +22,15 @@
         flex: 1;
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 15px;
-        overflow: hidden;
+        overflow-y: auto;
+        max-height: 600px;
     }
 }
 .movie-table {
     width: 100%;
     border-collapse: collapse;
+    overflow: auto;
+    max-height: 400px;
     // Style cho header
     th {
       background-color: #f39c12;
@@ -35,7 +40,6 @@
       font-weight: bold;
       border-bottom: 2px solid #ddd;
     }
-  
     // Style cho body
     td {
       padding: 10px;
@@ -58,7 +62,6 @@
       color: white;
       border: none;
       padding: 5px 10px;
-      margin: 2px;
       cursor: pointer;
       border-radius: 4px;
       font-size: 14px;
@@ -72,18 +75,20 @@
         background-color: #1d6fa5;
       }
       &.detail{
-        background-color: #dad00d;
-
+        font-size: 30px;
+        background-color: rgba(0, 0, 0, 0);
+        color: #dad00d;
         &:hover {
-          background-color: #c9ac09;
+          color: #c9ac09;
         }
       }
   
       &.edit {
-        background-color: #f39c12;
-  
+        font-size: 25px;
+        background-color: rgba(0, 0, 0, 0);
+        color: #f39c12;
         &:hover {
-          background-color: #e67e22;
+          color: #e67e22;
         }
       }
   
@@ -95,14 +100,17 @@
         }
       }
       &.add {
-        background-color: #4caf50;
+        font-size: 30px;
+        background-color: rgba(0, 0, 0, 0);
+        color: #e78a18;
         &:hover {
-          background-color: #438f45;
+          color: #e67e22;
         }
       }
     }
   }
-  .popup {
+  .popup-movie-edit-container {
+    all: unset; /* Bỏ qua tất cả các quy tắc bên ngoài */
     position: fixed;
     top: 0;
     left: 0;
@@ -113,61 +121,63 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  
-  .popup-content {
-    background: #fff;
+}
+
+.popup-movie-edit-content {
+    all: unset; 
+    background: white;
     padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
-  }
-  
-  .popup-content h2 {
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-    text-align: left;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .form-group input,
-  .form-group select {
+    max-width: 1000px;
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .form-actions {
+    box-sizing: border-box;
+    border-radius: 8px;
+    gap: 20px;
+}
+
+.movie-edit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+}
+
+.form-group {
     display: flex;
-    justify-content: space-between;
-  }
-  
-  .form-actions button {
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.wide-input {
+  width: 100%; 
+  height: 150px;  
+  resize: vertical;  
+}
+button {
     padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .form-actions button:first-child {
-    background: #3498db;
-    color: #fff;
-  }
-  
-  .form-actions button:last-child {
-    background: #e74c3c;
-    color: #fff;
-  }
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+
   .pagination {
     display: flex;
     align-items: center;
@@ -193,25 +203,71 @@
     position: fixed;
     bottom: 40px; /* Cách đáy 20px */
     right: 40px; /* Cách phải 20px */
-    background-color: #e78a18;
-    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    color: #e78a18;
     border: none;
-    border-radius: 4px;
-    width: 120px;
-    height: 30px;
-    font-size: 14px;
+    font-size: 50px;
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-movie-button:hover {
     transform: scale(1.1); 
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .add-movie-button:active {
     transform: scale(0.95); 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.popup-details-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-details-content {
+  background: white;
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.popup-details-content h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.popup-details-content p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.popup-details-content img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.popup-details-content button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.popup-details-content button:hover {
+  background-color: #0056b3;
 }

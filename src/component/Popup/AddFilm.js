@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import './AddFilm.scss';
+import { createNowShowing } from '../../apis/fetchNowShowing'; 
 
 const AddFilm = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
-        title: '',
-        details: '',
-        genre: '',
-        releaseDate: '',
-        rating: '',
-        duration: '',
-        posterURL: '',
+        Title: '',           
+        Description: '',     
+        Genre: '',           
+        ReleaseDate: '',    
+        Rating: '',          
+        Duration: '',     
+        Director: '',       
+        PosterUrl: '',      
     });
 
     const handleChange = (e) => {
@@ -17,10 +19,22 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
-        onClose(); 
+
+        // Chuyển ReleaseDate sang định dạng ISO 8601 trước khi gửi lên API
+        const { ReleaseDate, ...rest } = formData;
+        const releaseDate = ReleaseDate; // Chuyển đổi thành ISO string
+
+        // Gửi dữ liệu lên API createNowShowing
+        try {
+            const newFilmData = { ...rest, ReleaseDate: releaseDate }; // Đảm bảo dữ liệu là đúng format
+            await createNowShowing(newFilmData); // Gọi API để thêm phim mới
+            onSubmit(newFilmData); // Gọi onSubmit sau khi thêm thành công
+            onClose(); // Đóng form popup
+        } catch (error) {
+            alert('Đã có lỗi xảy ra khi tạo phim mới.');
+        }
     };
 
     if (!isOpen) return null;
@@ -29,13 +43,14 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
         <div className="add-film-overlay">
             <div className="add-film-popup">
                 <h2>Thêm Phim Mới</h2>
-                <form onSubmit={handleSubmit}>
+                <form className='form-flex' onSubmit={handleSubmit}>
+                <div className="form-column"> 
                     <label>
                         Tiêu đề:
                         <input
                             type="text"
-                            name="title"
-                            value={formData.title}
+                            name="Title"  // Đổi thành Title thay vì title
+                            value={formData.Title}
                             onChange={handleChange}
                             required
                         />
@@ -43,28 +58,33 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
                     <label>
                         Chi tiết:
                         <textarea
-                            name="details"
-                            value={formData.details}
+                            name="Description"  // Đổi thành Description thay vì description
+                            value={formData.Description}
                             onChange={handleChange}
+                            className="wide-input-addfilm"
                             required
                         />
                     </label>
+                    
+                    
+                    </div>
+                    <div className="form-column">
                     <label>
                         Thể loại:
                         <input
                             type="text"
-                            name="genre"
-                            value={formData.genre}
+                            name="Genre"  // Đổi thành Genre thay vì genre
+                            value={formData.Genre}
                             onChange={handleChange}
                             required
                         />
                     </label>
                     <label>
-                        Ngày ra mắt:
+                        Ngày ra mắt (Ngày và Giờ):
                         <input
-                            type="date"
-                            name="releaseDate"
-                            value={formData.releaseDate}
+                            type="datetime-local"
+                            name="ReleaseDate"  // Đổi thành ReleaseDate thay vì releaseDateTime
+                            value={formData.ReleaseDate}
                             onChange={handleChange}
                             required
                         />
@@ -73,8 +93,18 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
                         Thời lượng (phút):
                         <input
                             type="number"
-                            name="duration"
-                            value={formData.duration}
+                            name="Duration"  // Đổi thành Duration thay vì duration
+                            value={formData.Duration}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Đạo diễn:
+                        <input
+                            type="text"
+                            name="Director"  // Đổi thành Director thay vì director
+                            value={formData.Director}
                             onChange={handleChange}
                             required
                         />
@@ -83,17 +113,31 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
                         Poster URL:
                         <input
                             type="url"
-                            name="posterURL"
-                            value={formData.posterURL}
+                            name="PosterUrl"  // Đổi thành PosterUrl thay vì posterUrl
+                            value={formData.PosterUrl}
                             onChange={handleChange}
                             required
                         />
                     </label>
+                    <label>
+                        Đánh giá (1-10):
+                        <input
+                            type="number"
+                            name="Rating"  // Đổi thành Rating thay vì rating
+                            value={formData.Rating}
+                            onChange={handleChange}
+                            min="1"
+                            max="10"
+                            required
+                        />
+                    </label>
+                    
                     <div className="actions">
                         <button type="button" onClick={onClose}>
                             Hủy
                         </button>
                         <button type="submit">Lưu</button>
+                    </div>
                     </div>
                 </form>
             </div>
