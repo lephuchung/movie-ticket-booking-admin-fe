@@ -4,6 +4,8 @@ import { useTable } from 'react-table';
 import { fetchShowtimes } from '../../apis/fetchShowtimes';
 import { fetchNowShowing } from '../../apis/fetchNowShowing';
 import { updateShowtime, deleteShowtime } from '../../apis/fetchShowtimes'; // Import các hàm API update và delete
+import { BiDetail } from "react-icons/bi";
+import { FaScrewdriverWrench } from "react-icons/fa6";
 
 const ShowtimeList = () => {
     const [showtimes, setShowtimes] = useState([]);
@@ -80,8 +82,8 @@ const ShowtimeList = () => {
                 Header: 'Hành Động',
                 Cell: ({ row }) => (
                     <div>
-                        <button className="detail" onClick={() => handleDetails(row.original)}>Chi tiết</button>
-                        <button className="edit" onClick={() => handleEdit(row.original)}>Sửa</button>
+                        <button className="detail" onClick={() => handleDetails(row.original)}><BiDetail /></button>
+                        <button className="edit" onClick={() => handleEdit(row.original)}><FaScrewdriverWrench /></button>
                         {/* <button className="delete" onClick={() => handleDelete(row.original)}>Xóa</button> */}
                     </div>
                 ),

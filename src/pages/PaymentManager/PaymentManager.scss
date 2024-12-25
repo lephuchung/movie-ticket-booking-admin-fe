@@ -75,23 +75,3 @@
       }
     }
   }
-  .add-payment-button {
-    position: fixed;
-    bottom: 40px; /* Cách đáy 20px */
-    right: 40px; /* Cách phải 20px */
-    background-color: rgba(0, 0, 0, 0);
-    color: #e78a18;
-    border: none;
-    font-size: 50px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.add-payment-button:hover {
-    transform: scale(1.1); 
-}
-
-.add-payment-button:active {
-    transform: scale(0.95); 
-}

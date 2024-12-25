@@ -75,18 +75,20 @@
         background-color: #1d6fa5;
       }
       &.detail{
-        background-color: #dad00d;
-
+        font-size: 30px;
+        background-color: rgba(0, 0, 0, 0);
+        color: #dad00d;
         &:hover {
-          background-color: #c9ac09;
+          color: #c9ac09;
         }
       }
   
       &.edit {
-        background-color: #f39c12;
-  
+        font-size: 25px;
+        background-color: rgba(0, 0, 0, 0);
+        color: #f39c12;
         &:hover {
-          background-color: #e67e22;
+          color: #e67e22;
         }
       }
   

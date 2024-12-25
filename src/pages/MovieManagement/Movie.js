@@ -6,6 +6,8 @@ import AddShow from '../../component/Popup/AddShow';
 import { fetchNowShowing, deleteNowShowing, updateNowShowing } from '../../apis/fetchNowShowing';
 import { FaPlusCircle } from "react-icons/fa";
 import { FaRegCalendarPlus } from "react-icons/fa6";
+import { BiDetail } from "react-icons/bi";
+import { FaScrewdriverWrench } from "react-icons/fa6";
 
 const Movie = () => {
     const [data, setData] = useState([]);
@@ -82,8 +84,8 @@ const Movie = () => {
             Header: 'Hành động',
             Cell: ({ row }) => (
             <div>
-                <button className="detail" onClick={() => handleDetails(row.original)}>Chi tiết</button>
-                <button className="edit" onClick={() => openEditPopup(row.original)}>Sửa</button>
+                <button className="detail" onClick={() => handleDetails(row.original)}><BiDetail /></button>
+                <button className="edit" onClick={() => openEditPopup(row.original)}><FaScrewdriverWrench /></button>
                 {/* <button className="delete" onClick={() => handleDelete(row.original)}>Xóa</button> */}
                 <button className="add" onClick={() => handleAddShow(row.values.id)}><FaRegCalendarPlus /></button>
             </div>

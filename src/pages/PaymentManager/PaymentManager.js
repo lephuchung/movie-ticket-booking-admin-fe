@@ -156,9 +156,6 @@ const PaymentManager = () => {
                     </tbody>
                 </table>
             </div>
-            <button className="add-payment-button">
-                <FaPlusCircle />
-            </button>
         </div>
     );
 };
