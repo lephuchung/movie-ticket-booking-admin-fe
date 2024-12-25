@@ -1,9 +1,14 @@
 import React from 'react'
 import "./ShowtimeFilter.scss"
 
-const ShowtimeFilter = () => {
+const ShowtimeFilter = ({filter, setFilter}) => {
     return (
-        <div>ShowtimeFilter</div>
+        <span>
+            Search:{' '}
+            <input value={filter || ''}
+            onChange={e=> setFilter(e.target.value)}/>
+        </span>
+
     )
 }
 
