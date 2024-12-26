@@ -1,17 +1,17 @@
 import { fetchData, updateData, deleteData, createData } from '../customHook/callApi';
 
 export const fetchUser = async () => {
-    return fetchData('/api/v1/users');
+    return fetchData('/users');
 };
 
 export const updateUser = async (id, updatedData) => {
-    return updateData(`/api/v1/users/${id}`, updatedData);
+    return updateData(`/users/${id}`, updatedData);
 };
 
 export const createUser = async (newUserData) => {
-    return createData('/api/v1/users', newUserData);
+    return createData('/users', newUserData);
 };
 
 export const deleteUser = async (id) => {
-    return deleteData(`/api/v1/users/${id}`);
+    return deleteData(`/users/${id}`);
 };
