@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AddShow.scss';
 import { createShowtime } from '../../apis/fetchShowtimes';
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
 
 const AddShow = ({ isOpen, onClose, onSubmit, movieId }) => {
     const [formData, setFormData] = useState({
@@ -104,10 +106,13 @@ const AddShow = ({ isOpen, onClose, onSubmit, movieId }) => {
                         />
                     </label>
                     <div className="actions">
-                        <button type="button" onClick={onClose}>
-                            Hủy
+                        <button type="submit">
+                        <FaSave />
                         </button>
-                        <button type="submit">Lưu</button>
+                        <button type="button" onClick={onClose}>
+                        <GiCancel />
+                        </button>
+                        
                     </div>
                 </form>
             </div>

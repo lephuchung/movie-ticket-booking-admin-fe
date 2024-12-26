@@ -56,11 +56,14 @@
 }
 
 .add-show-popup button[type="submit"] {
-    background-color: #4caf50;
-    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 20px;
+    color: #007bff;
 }
 
 .add-show-popup button[type="button"] {
-    background-color: #f44336;
-    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 20px;
+    color: #c0392b;
+
 }

@@ -8,11 +8,24 @@ import { FaPlusCircle } from "react-icons/fa";
 import { FaRegCalendarPlus } from "react-icons/fa6";
 import { BiDetail } from "react-icons/bi";
 import { FaScrewdriverWrench } from "react-icons/fa6";
+import { MdFirstPage } from "react-icons/md";
+import { GrFormPrevious } from "react-icons/gr";
+import { GrFormNext } from "react-icons/gr";
+import { MdLastPage } from "react-icons/md";
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
+import '../../style/search.scss';
+import '../../style/pagination.scss';
 
 const Movie = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filteredData, setFilteredData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(6);
+
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
     const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
     const [isAddShowPopupOpen, setIsAddShowPopupOpen] = useState(false);
@@ -37,6 +50,7 @@ const Movie = () => {
                     posterUrl: movie.PosterUrl,
                 }));
                 setData(formattedData);
+                setFilteredData(formattedData);
             } catch (err) {
                 console.error('Error fetching movies:', err);
                 setError('Lỗi khi tải dữ liệu phim.');
@@ -47,7 +61,19 @@ const Movie = () => {
 
         fetchData();
     }, [refreshData]);
-    
+
+    const handleSearch = (e) => {
+        const value = e.target.value.toLowerCase();
+        setSearchQuery(value);
+        setFilteredData(
+            data.filter(movie =>
+                movie.title.toLowerCase().includes(value) ||
+                movie.genre.toLowerCase().includes(value)
+            )
+        );
+        setCurrentPage(1); // Reset về trang đầu
+    };
+
     const columns = React.useMemo(
         () => [
         {
@@ -91,8 +117,29 @@ const Movie = () => {
             ),
         },
         ],
-        []
+        [currentPage, rowsPerPage]
     );
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+    
+
+    const paginatedData = React.useMemo(() => {
+        const filtered = data.filter(movie =>
+            movie.title.toLowerCase().includes(searchQuery) ||
+            movie.genre.toLowerCase().includes(searchQuery)
+        );
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        return filtered.slice(startIndex, endIndex);
+    }, [data, searchQuery, currentPage, rowsPerPage]);
+    
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
 
     const openEditPopup = (movie) => {
         setEditData({
@@ -203,14 +250,22 @@ const Movie = () => {
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
-        data,
+        data: paginatedData,
     });
 
     return (
         <div className='page-container-movie'>
             <h1 className='page-title'>Quản lý phim</h1>
             <div className='page-main-content'>
- 
+                <div className='search-container'>
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm phim..."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className='search-box'
+                    />
+                </div>
                 <table {...getTableProps()} className="movie-table">
                     <thead>
                     {headerGroups.map(headerGroup => (
@@ -234,6 +289,52 @@ const Movie = () => {
                     })}
                     </tbody>
                 </table>
+                <div className='pagination'>
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(1)}
+                        className='pagination-btn'
+                    >
+                        <MdFirstPage />
+                    </button>
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        className='pagination-btn'
+                    >
+                        <GrFormPrevious />
+                    </button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        className='pagination-btn'
+                    >
+                        <GrFormNext />
+                    </button>
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(totalPages)}
+                        className='pagination-btn'
+                    >
+                        <MdLastPage />
+                    </button>
+                    <select
+                        value={currentPage}
+                        onChange={(e) => handlePageChange(Number(e.target.value))}
+                        className="page-select"
+                    >
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <option key={page} value={page}>
+                                {page}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+
                 <button className="add-movie-button" onClick={() => setIsAddPopupOpen(true)}>
                     <FaPlusCircle />
                 </button>
@@ -326,8 +427,8 @@ const Movie = () => {
                                 />
                             </div>
                             <div className="form-actions">
-                                <button type="button" onClick={handleSave}>Lưu</button>
-                                <button type="button" onClick={closeEditPopup}>Hủy</button>
+                                <button className='save-btn'type="button" onClick={handleSave}><FaSave /></button>
+                                <button className='cancel-btn'type="button" onClick={closeEditPopup}><GiCancel /></button>
                             </div>
                         </form>
                     </div>

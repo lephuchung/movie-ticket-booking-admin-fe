@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AddAccount.scss';
 import { createUser } from '../../apis/fetchUser';
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
 
 const AddAccount = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -107,11 +109,11 @@ const AddAccount = ({ isOpen, onClose, onSubmit }) => {
                         </select>
                     </label>
                     <div className="actions">
-                        <button className='cancel'type="button" onClick={onClose} disabled={isSubmitting}>
-                            Hủy
-                        </button>
                         <button className='save'type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? 'Đang lưu...' : 'Lưu'}
+                            {isSubmitting ? 'Đang lưu...' : <FaSave />}
+                        </button>
+                        <button className='cancel'type="button" onClick={onClose} disabled={isSubmitting}>
+                            <GiCancel />
                         </button>
                     </div>
                 </form>

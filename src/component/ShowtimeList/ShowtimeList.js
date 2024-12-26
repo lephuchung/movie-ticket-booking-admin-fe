@@ -6,6 +6,12 @@
     import { updateShowtime, deleteShowtime } from '../../apis/fetchShowtimes'; // Import các hàm API update và delete
     import { BiDetail } from "react-icons/bi";
     import { FaScrewdriverWrench } from "react-icons/fa6";
+    import { MdFirstPage } from "react-icons/md";
+    import { GrFormPrevious } from "react-icons/gr";
+    import { GrFormNext } from "react-icons/gr";
+    import { MdLastPage } from "react-icons/md";
+    import { FaSave } from "react-icons/fa";
+    import { GiCancel } from "react-icons/gi";
 
     const ShowtimeList = () => {
         const [showtimes, setShowtimes] = useState([]);
@@ -14,6 +20,8 @@
         const [isPopupOpen, setIsPopupOpen] = useState(false);
         const [currentEdit, setCurrentEdit] = useState(null);
         const [searchTerm, setSearchTerm] = useState(''); 
+        const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+        const [pageSize, setPageSize] = useState(6); // Số dòng trên mỗi trang
         
         // Fetch dữ liệu từ API
         useEffect(() => {
@@ -66,6 +74,14 @@
             showtime.date.includes(searchTerm) || 
             showtime.time.includes(searchTerm)
         );
+        const paginatedData = filteredData.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+        );
+         // Xử lý chuyển trang
+        const handlePageChange = (page) => {
+            setCurrentPage(page);
+        };
 
         const columns = React.useMemo(
             () => [
@@ -100,7 +116,7 @@
                     ),
                 },
             ],
-            []
+            [currentPage, pageSize]
         );
         
         
@@ -220,17 +236,60 @@
         // Sử dụng React Table
         const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
             columns,
-            data: filteredData,  // Sử dụng dữ liệu đã lọc
+            data: paginatedData,  // Sử dụng dữ liệu đã lọc
         });
+
+        const totalPages = Math.ceil(filteredData.length / pageSize);
+        const renderPagination = () => (
+            <div className="pagination">
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                    <MdFirstPage />
+                </button>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                    <GrFormPrevious />
+                </button>
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                    <GrFormNext />
+                </button>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                    <MdLastPage />
+                </button>
+                <select
+                    value={currentPage}
+                    onChange={(e) => handlePageChange(Number(e.target.value))}
+                    className="page-select"
+                >
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+        
+    
 
         return (
             <div>
                 <div className="search-container">
                 <input
                     type="text"
-                    placeholder="Tìm kiếm..."
+                    placeholder="Tìm kiếm suất chiếu..."
                     value={searchTerm}
                     onChange={handleSearch}
+                    className='search-box'
                 />
                 </div>
                 <table {...getTableProps()} className="showtime-table">
@@ -256,6 +315,7 @@
                         })}
                     </tbody>
                 </table>
+                {renderPagination()}
                 {isPopupOpen && currentEdit && (
                     <div className="popup">
                         <div className="popup-content">
@@ -296,8 +356,8 @@
                                     value={currentEdit.seatStatus || 'available'}
                                     onChange={handleChange}
                                 >
-                                    <option value="available">Có sẵn</option>
-                                    <option value="unavailable">Hết ghế</option>
+                                    <option value="available">Available</option>
+                                    <option value="unavailable">Unavailable</option>
                                 </select>
                             </label>
                             <label>
@@ -310,8 +370,8 @@
                                 />
                             </label>
                             <div className="popup-actions">
-                                <button onClick={handleSave}>Lưu</button>
-                                <button onClick={() => setIsPopupOpen(false)}>Hủy</button>
+                                <button onClick={handleSave}><FaSave /></button>
+                                <button onClick={() => setIsPopupOpen(false)}><GiCancel /></button>
                             </div>
                         </div>
                     </div>

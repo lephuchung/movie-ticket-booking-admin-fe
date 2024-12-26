@@ -65,20 +65,23 @@
                 transition: background-color 0.3s ease;
 
                 &.cancel {
-                    background-color: #f44336;
-                    color: #fff;
+                    background-color: rgba(0, 0, 0, 0);
+                    font-size: 20px;
+                    color: #c0392b;
 
                     &:hover {
-                        background-color: #d32f2f;
+                        background-color: rgba(0, 0, 0, 0);
                     }
                 }
 
                 &.save {
-                    background-color: #4caf50;
-                    color: #fff;
+                    background-color: rgba(0, 0, 0, 0);
+                    font-size: 20px;
+                    color: #007bff;
+                    margin-left: 250px;
 
                     &:hover {
-                        background-color: #388e3c;
+                        background-color: rgba(0, 0, 0, 0);
                     }
                 }
             }

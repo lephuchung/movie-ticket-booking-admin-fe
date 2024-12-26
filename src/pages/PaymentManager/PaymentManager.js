@@ -5,11 +5,20 @@ import { fetchPayment, deletePayment } from '../../apis/fetchPayment';
 import { fetchUser } from '../../apis/fetchUser';
 import { MdDeleteOutline } from "react-icons/md";
 import { FaPlusCircle } from "react-icons/fa";
+import { MdFirstPage } from "react-icons/md";
+import { GrFormPrevious } from "react-icons/gr";
+import { GrFormNext } from "react-icons/gr";
+import { MdLastPage } from "react-icons/md";
 
 const PaymentManager = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [filteredData, setFilteredData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(''); // Từ khóa tìm kiếm
+    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const itemsPerPage = 10; // Số mục mỗi trang
 
     useEffect(() => {
         const getPayments = async () => {
@@ -34,6 +43,7 @@ const PaymentManager = () => {
                 }));
 
                 setData(formattedData); // Gán dữ liệu đã format vào state
+                setFilteredData(formattedData);
                 setLoading(false);
             } catch (err) {
                 setError('Lỗi khi tải dữ liệu thanh toán');
@@ -43,6 +53,15 @@ const PaymentManager = () => {
 
         getPayments();
     }, []); // Chạy một lần khi component mount
+
+    useEffect(() => {
+        const filtered = data.filter((item) => 
+            item.CustomerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.PaymentId.toString().includes(searchQuery) // Tìm kiếm theo ID thanh toán
+        );
+        setFilteredData(filtered);
+        setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
+    }, [searchQuery, data]);
 
     // Format tiền tệ
     const formatAmount = (amount) => {
@@ -70,6 +89,21 @@ const PaymentManager = () => {
             setData(data.filter((item) => item.PaymentId !== id));
         }
     };
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    const currentPageData = filteredData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Tính tổng số trang
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
 
     const columns = React.useMemo(
         () => [
@@ -101,28 +135,28 @@ const PaymentManager = () => {
                 Header: 'Phương thức thanh toán',
                 accessor: 'PaymentMethod',
             },
-            // {
-            //     Header: 'Hành động',
-            //     Cell: ({ row }) => (
-            //         <div>
-            //             {row.values.PaymentStatus === 'Chưa thanh toán' && (
-            //                 <button className="payment" onClick={() => handlePayment(row.values.PaymentId)}>
-            //                     Thanh toán
-            //                 </button>
-            //             )}
-            //             <button className="delete" onClick={() => handleDelete(row.values.PaymentId)}>
-            //                 <MdDeleteOutline />
-            //             </button>
-            //         </div>
-            //     ),
-            // },
+            {
+                Header: 'Hành động',
+                Cell: ({ row }) => (
+                    <div>
+                        {/* {row.values.PaymentStatus === 'Chưa thanh toán' && (
+                            <button className="payment" onClick={() => handlePayment(row.values.PaymentId)}>
+                                Thanh toán
+                            </button>
+                        )}
+                        <button className="delete" onClick={() => handleDelete(row.values.PaymentId)}>
+                            <MdDeleteOutline />
+                        </button> */}
+                    </div>
+                ),
+            },
         ],
-        [data] // Columns phụ thuộc vào dữ liệu
+        [data, currentPage] // Columns phụ thuộc vào dữ liệu
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
-        data,
+        data: currentPageData,
     });
 
     if (loading) return <div>Đang tải dữ liệu...</div>;
@@ -132,6 +166,15 @@ const PaymentManager = () => {
         <div className="page-container-payment">
             <h1 className="page-title">Quản lý thanh toán</h1>
             <div className="page-main-content">
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm thanh toán..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="search-box"
+                    />
+                </div>
                 <table {...getTableProps()} className="payment-table">
                     <thead>
                         {headerGroups.map(headerGroup => (
@@ -155,9 +198,50 @@ const PaymentManager = () => {
                         })}
                     </tbody>
                 </table>
+                {renderPagination()}
             </div>
         </div>
     );
+    function renderPagination() {
+        return (
+            <div className="pagination">
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                    <MdFirstPage />
+                </button>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                    <GrFormPrevious />
+                </button>
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                    <GrFormNext />
+                </button>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                    <MdLastPage />
+                </button>
+                <select
+                    value={currentPage}
+                    onChange={(e) => handlePageChange(Number(e.target.value))}
+                    className="page-select"
+                >
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+    }
 };
 
 export default PaymentManager;

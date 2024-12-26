@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AddFilm.scss';
 import { createNowShowing } from '../../apis/fetchNowShowing'; 
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
 
 const AddFilm = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -133,10 +135,15 @@ const AddFilm = ({ isOpen, onClose, onSubmit }) => {
                     </label>
                     
                     <div className="actions">
-                        <button type="button" onClick={onClose}>
-                            Hủy
+                        <button 
+                        type="submit">
+                            <FaSave />
                         </button>
-                        <button type="submit">Lưu</button>
+                        <button 
+                        type="button" onClick={onClose}>
+                            <GiCancel />
+                        </button>
+                        
                     </div>
                     </div>
                 </form>
