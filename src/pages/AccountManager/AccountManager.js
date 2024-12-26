@@ -173,10 +173,10 @@ const AccountManager = () => {
 
     const columns = React.useMemo(
         () => [
-            {
-                Header: 'STT',
-                accessor: (row, rowIndex) => rowIndex + 1,
-            },
+            // {
+            //     Header: 'STT',
+            //     accessor: (row, rowIndex) => rowIndex + 1,
+            // },
             {
                 Header: 'ID',
                 accessor: 'id',
