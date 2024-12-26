@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
-import { fetchUser } from '../../apis/fetchUser'; 
+import { fetchUser } from '../../apis/fetchUser';
 import { fetchTiket, updateTiket, deleteTiket } from '../../apis/fetchTicket';
 import { FaTrash, FaSave } from "react-icons/fa";
 import { BiDetail } from "react-icons/bi";
@@ -11,8 +11,11 @@ import { FaScrewdriverWrench } from "react-icons/fa6";
 import './TicketManager.scss';
 import '../../style/search.scss';
 import '../../style/pagination.scss';
+import { useNavigate } from 'react-router';
 
 const TicketManager = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -59,6 +62,10 @@ const TicketManager = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (!localStorage.token) navigate("/login")
+    }, [localStorage.token])
+
     const handleSearch = (e) => {
         const value = e.target.value.toLowerCase();
         setSearchQuery(value);
@@ -85,9 +92,9 @@ const TicketManager = () => {
             accessor: 'customerName',
         },
         {
-            Header: '',  
+            Header: '',
             accessor: 'userId',
-            Cell: () => null,  
+            Cell: () => null,
         },
         {
             Header: 'Số ghế',
@@ -149,7 +156,7 @@ const TicketManager = () => {
             Mã suất chiếu: ${ticket.showtimeId}\n
             Mã thanh toán: ${ticket.paymentId}\n`);
     };
-    
+
 
     const handleDelete = async (ticketId) => {
         if (window.confirm('Bạn có chắc muốn xóa vé này không?')) {
@@ -163,8 +170,8 @@ const TicketManager = () => {
         }
     };
 
-const handleSave = async () => {
-        console.log("editdata",editData)
+    const handleSave = async () => {
+        console.log("editdata", editData)
         try {
             const updatedTicket = {
                 SeatNumber: editData.seatNumber,
@@ -175,9 +182,9 @@ const handleSave = async () => {
                 ShowtimeId: editData.showtimeId,
                 PaymentId: editData.paymentId,
             };
-            console.log("updateticket",updatedTicket)
+            console.log("updateticket", updatedTicket)
             await updateTiket(editData.id, updatedTicket);
-            console.log("editdata",editData.id, updatedTicket)
+            console.log("editdata", editData.id, updatedTicket)
             setData((prevData) => {
                 const updatedData = prevData.map((item) =>
                     item.id === editData.id ? { ...item, ...editData } : item
@@ -187,7 +194,7 @@ const handleSave = async () => {
             setFilteredData(prevData => prevData.map(ticket =>
                 ticket.id === editData.id ? { ...ticket, ...editData } : ticket
             ));
-    
+
             closeEditPopup();
         } catch (error) {
             console.error('Lỗi khi cập nhật phim:', error);
@@ -199,8 +206,6 @@ const handleSave = async () => {
         const { name, value } = e.target;
         setEditData(prevData => ({ ...prevData, [name]: value }));
     };
-
-    
 
     const paginatedData = React.useMemo(() => {
         const startIndex = (currentPage - 1) * rowsPerPage;
@@ -225,69 +230,69 @@ const handleSave = async () => {
         <div className='page-container-ticket'>
             <h1 className='page-title'>Quản lý vé</h1>
             <div className='page-main-content'>
-            <div className='search-container'>
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm vé..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    className='search-box'
-                />
-            </div>
-            <table {...getTableProps()} className="ticket-table">
-                <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map(cell => (
-                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                <div className='search-container'>
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm vé..."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className='search-box'
+                    />
+                </div>
+                <table {...getTableProps()} className="ticket-table">
+                    <thead>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                                 ))}
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-            <div className='pagination'>
-                <button
-                    disabled={currentPage === 1}
-                    onClick={() => handlePageChange(1)}
-                    className='pagination-btn'
-                >
-                    <MdFirstPage />
-                </button>
-                <button
-                    disabled={currentPage === 1}
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className='pagination-btn'
-                >
-                    <GrFormPrevious />
-                </button>
-                <span>Trang {currentPage}/{totalPages}</span>
-                <button
-                    disabled={currentPage === totalPages}
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className='pagination-btn'
-                >
-                    <GrFormNext />
-                </button>
-                <button
-                    disabled={currentPage === totalPages}
-                    onClick={() => handlePageChange(totalPages)}
-                    className='pagination-btn'
-                >
-                    <MdLastPage />
-                </button>
-                <select
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+                <div className='pagination'>
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(1)}
+                        className='pagination-btn'
+                    >
+                        <MdFirstPage />
+                    </button>
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        className='pagination-btn'
+                    >
+                        <GrFormPrevious />
+                    </button>
+                    <span>Trang {currentPage}/{totalPages}</span>
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        className='pagination-btn'
+                    >
+                        <GrFormNext />
+                    </button>
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(totalPages)}
+                        className='pagination-btn'
+                    >
+                        <MdLastPage />
+                    </button>
+                    <select
                         value={currentPage}
                         onChange={(e) => handlePageChange(Number(e.target.value))}
                         className="page-select"
@@ -298,57 +303,57 @@ const handleSave = async () => {
                             </option>
                         ))}
                     </select>
-            </div>
-
-            {isEditPopupOpen && (
-                <div className="popup-movie-edit-container">
-                    <div className="popup-movie-edit-content ">
-                        <form className="movie-edit-form">
-                            <div className="form-group">
-                                <label>Mã vé:</label>
-                                <input type="text" value={editData.id} disabled />
-                            </div>
-                            <div className="form-group">
-                                <label>Tên khách hàng:</label>
-                                <input type="text" value={editData.customerName} disabled />
-                            </div>
-                            <div className="form-group">
-                                <label>Số ghế:</label>
-                                <input
-                                    type="text"
-                                    name="seatNumber"
-                                    value={editData.seatNumber}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Tổng giá:</label>
-                                <input
-                                    type="number"
-                                    name="totalPrice"
-                                    value={editData.totalPrice}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Trạng thái thanh toán:</label>
-                                <select
-                                    name="paymentStatus"
-                                    value={editData.paymentStatus}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="paid">Đã thanh toán</option>
-                                    <option value="unpaid">Chưa thanh toán</option>
-                                </select>
-                            </div>
-                            <div className="form-actions">
-                                <button className='save-btn' type="button" onClick={handleSave}><FaSave /></button>
-                                <button className='cancel-btn' type="button" onClick={closeEditPopup}><GiCancel /></button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
-            )}
+
+                {isEditPopupOpen && (
+                    <div className="popup-movie-edit-container">
+                        <div className="popup-movie-edit-content ">
+                            <form className="movie-edit-form">
+                                <div className="form-group">
+                                    <label>Mã vé:</label>
+                                    <input type="text" value={editData.id} disabled />
+                                </div>
+                                <div className="form-group">
+                                    <label>Tên khách hàng:</label>
+                                    <input type="text" value={editData.customerName} disabled />
+                                </div>
+                                <div className="form-group">
+                                    <label>Số ghế:</label>
+                                    <input
+                                        type="text"
+                                        name="seatNumber"
+                                        value={editData.seatNumber}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Tổng giá:</label>
+                                    <input
+                                        type="number"
+                                        name="totalPrice"
+                                        value={editData.totalPrice}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Trạng thái thanh toán:</label>
+                                    <select
+                                        name="paymentStatus"
+                                        value={editData.paymentStatus}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="paid">Đã thanh toán</option>
+                                        <option value="pending">Chưa thanh toán</option>
+                                    </select>
+                                </div>
+                                <div className="form-actions">
+                                    <button className='save-btn' type="button" onClick={handleSave}><FaSave /></button>
+                                    <button className='cancel-btn' type="button" onClick={closeEditPopup}><GiCancel /></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
