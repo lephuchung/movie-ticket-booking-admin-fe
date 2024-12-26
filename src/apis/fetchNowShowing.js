@@ -1,18 +1,18 @@
 import { fetchData, createData, deleteData, updateData } from '../customHook/callApi';
 
 export const fetchNowShowing = async () => {
-    return fetchData('/api/v1/movies');
+    return fetchData('/movies');
 };
 
 
 export const updateNowShowing = async (id, updatedData) => {
-    return updateData(`/api/v1/movies/${id}`, updatedData);
+    return updateData(`/movies/${id}`, updatedData);
 };
 
 export const deleteNowShowing = async (id) => {
-    return deleteData(`/api/v1/movies/${id}`);
+    return deleteData(`/movies/${id}`);
 };
 
 export const createNowShowing = async (newMovieData) => {
-    return createData('/api/v1/movies', newMovieData);
+    return createData('/movies', newMovieData);
 };
