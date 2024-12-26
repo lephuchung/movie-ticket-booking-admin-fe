@@ -216,7 +216,7 @@ const PaymentManager = () => {
                     <GrFormPrevious />
                 </button>
                 <span>
-                    Page {currentPage} of {totalPages}
+                    Trang {currentPage}/{totalPages}
                 </span>
                 <button 
                 className='pagination-btn'
