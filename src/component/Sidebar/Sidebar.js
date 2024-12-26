@@ -12,6 +12,7 @@ const Sidebar = () => {
             <NavLink to={"/showtime"}>Quản lý suất chiếu</NavLink>
             <NavLink to={"/account"}>Quản lý tài khoản</NavLink>
             <NavLink to={"/payment"}>Quản lý thanh toán</NavLink>
+            <NavLink to={"/ticket"}>Quản lý vé</NavLink>
             <button className="logout-btn">
                 Đăng xuất <IoLogOut className='icon'/>
             </button>

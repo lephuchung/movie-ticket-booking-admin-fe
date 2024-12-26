@@ -54,14 +54,18 @@ const AccountManager = () => {
 
     // Lọc dữ liệu theo từ khóa tìm kiếm
     useEffect(() => {
-        const filtered = data.filter((item) => 
-            item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.phone.includes(searchQuery)
-        );
-        setFilteredData(filtered);
-        setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
-    }, [searchQuery, data]);
+        if (searchQuery) {  
+            const filtered = data.filter((item) => 
+                (item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (item.email && item.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (item.phone && item.phone.includes(searchQuery))
+            );
+            setFilteredData(filtered);
+        } else {
+            setFilteredData(data); 
+        }
+        setCurrentPage(1); 
+    }, [searchQuery, data])
 
     // Xử lý khi đổi trang
     const handlePageChange = (page) => {
@@ -107,7 +111,7 @@ const AccountManager = () => {
             createdAt: newAccount.CreateAt,
             status: newAccount.Status,
         }]);
-        window.location.reload();
+         window.location.reload();
     };
     
     const handleEditAccount = (account) => {
@@ -141,12 +145,12 @@ const AccountManager = () => {
     
             // Cập nhật thông tin tài khoản qua API
             await updateUser(updatedAccount.id, formattedAccount);  
-            window.location.reload();
+            // window.location.reload();
     
             // Cập nhật lại dữ liệu bảng
             setData((prevData) =>
                 prevData.map((item) =>
-                    item.id === updatedAccount.id ? { ...item, ...formattedAccount } : item
+                    item.id === updatedAccount.id ? { ...item, ...updatedAccount } : item
                 )
             );
     

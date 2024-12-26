@@ -8,6 +8,7 @@ import Home from './pages/Home/Home';
 import NotFound from './pages/NotFound/NotFound';
 import AccountManager from './pages/AccountManager/AccountManager'
 import PaymentManager from './pages/PaymentManager/PaymentManager'
+import TicketManager from './pages/TicketManager/TicketManager'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path='*' element={<NotFound />} />
               <Route path='/account' element={<AccountManager />} />
               <Route path='/payment' element={<PaymentManager />} />
+              <Route path='/ticket' element={<TicketManager />} />
             </Routes>
           </div>
 

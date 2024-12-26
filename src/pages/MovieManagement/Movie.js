@@ -197,7 +197,7 @@ const Movie = () => {
         console.log("editdata",editData)
         try {
             const releaseDateUTC = new Date(editData.releaseDate); // Chuyển thành đối tượng Date
-        const releaseDateWith7Hours = new Date(releaseDateUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ
+            const releaseDateWith7Hours = new Date(releaseDateUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ
             const updatedMovie = {
                 Title: editData.title,
                 Description: editData.description,
@@ -208,7 +208,7 @@ const Movie = () => {
                 Director: editData.director,
                 PosterUrl: editData.posterUrl,
             };
-            console.log("dâtguirdi",updatedMovie)
+   
             await updateNowShowing(editData.id, updatedMovie);
             setData((prevData) => {
                 const updatedData = prevData.map((item) =>
