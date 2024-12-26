@@ -7,10 +7,10 @@ const Sidebar = () => {
         <div className="sidebar">
             <img src="/logo.png" alt="Logo" />
             <NavLink to={'/'}>Trang chủ</NavLink>
-            <NavLink to={"/showtime"}>Quản lý suất chiếu</NavLink>
             <NavLink to={"/movie"}>Quản lý phim</NavLink>
+            <NavLink to={"/showtime"}>Quản lý suất chiếu</NavLink>
             <NavLink to={"/account"}>Quản lý tài khoản</NavLink>
-            <NavLink to={"/payment"}>Quản lý <br/>thanh toán</NavLink>
+            <NavLink to={"/payment"}>Quản lý thanh toán</NavLink>
         </div>
     )
 }

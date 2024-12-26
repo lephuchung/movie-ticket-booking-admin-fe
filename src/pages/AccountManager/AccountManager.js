@@ -6,6 +6,12 @@ import { MdDeleteOutline } from "react-icons/md";
 import AddAccount from '../../component/Popup/AddAccount';
 import { FaPlusCircle } from "react-icons/fa";
 import { FaScrewdriverWrench } from "react-icons/fa6";
+import { MdFirstPage } from "react-icons/md";
+import { GrFormPrevious } from "react-icons/gr";
+import { GrFormNext } from "react-icons/gr";
+import { MdLastPage } from "react-icons/md";
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
 
 const AccountManager = () => {
     const [data, setData] = useState([]);
@@ -14,6 +20,11 @@ const AccountManager = () => {
     const [isAddAccountOpen, setIsAddAccountOpen] = useState(false);
     const [isEditAccountOpen, setIsEditAccountOpen] = useState(false);
     const [currentEdit, setCurrentEdit] = useState(null);  // Để lưu thông tin tài khoản hiện tại cần sửa
+
+    const [filteredData, setFilteredData] = useState([]); // Dữ liệu đã lọc
+    const [searchQuery, setSearchQuery] = useState(''); // Từ khóa tìm kiếm
+    const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
+    const itemsPerPage = 6; // Số dòng mỗi trang
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,6 +41,7 @@ const AccountManager = () => {
                     password: user.Passdord,
                 }));
                 setData(formattedData);
+                setFilteredData(formattedData);
             } catch (err) {
                 setError('Lỗi khi tải dữ liệu người dùng.');
             } finally {
@@ -39,6 +51,37 @@ const AccountManager = () => {
 
         fetchData();
     }, []); 
+
+    // Lọc dữ liệu theo từ khóa tìm kiếm
+    useEffect(() => {
+        const filtered = data.filter((item) => 
+            item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.phone.includes(searchQuery)
+        );
+        setFilteredData(filtered);
+        setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
+    }, [searchQuery, data]);
+
+    // Xử lý khi đổi trang
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    // Lấy dữ liệu cho trang hiện tại
+    const currentPageData = filteredData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Tính tổng số trang
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
 
     const handleDelete = async (id) => {
       if (window.confirm(`Bạn có chắc muốn xóa tài khoản với ID: ${id}?`)) {
@@ -175,12 +218,12 @@ const AccountManager = () => {
                 ),
             },
         ],
-        [data]
+        [currentPage, itemsPerPage]
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
-        data,
+        data: currentPageData,
     });
 
     if (loading) return <div>Đang tải dữ liệu...</div>;
@@ -190,6 +233,15 @@ const AccountManager = () => {
         <div className="page-container-acc">
             <h1 className="page-title">Quản lý tài khoản</h1>
             <div className="page-main-content">
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm tài khoản..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="search-box"
+                    />
+                </div>
                 <table {...getTableProps()} className="account-table">
                     <thead>
                         {headerGroups.map((headerGroup) => (
@@ -213,7 +265,9 @@ const AccountManager = () => {
                         })}
                     </tbody>
                 </table>
+                {renderPagination()}
             </div>
+            
             <button className="add-account-button" onClick={() => setIsAddAccountOpen(true)}>
                     <FaPlusCircle />
                 </button>
@@ -222,7 +276,7 @@ const AccountManager = () => {
                 onClose={() => setIsAddAccountOpen(false)}
                 onSubmit={handleAddAccountSubmit}
             />
-                        {isEditAccountOpen && currentEdit && (
+            {isEditAccountOpen && currentEdit && (
                 <div className="edit-account-overlay">
                     <div className="edit-account-popup">
                         <h2>Sửa Tài Khoản</h2>
@@ -285,14 +339,58 @@ const AccountManager = () => {
                             />
                         </label>
                         <div className="actions">
-                            <button className='cancel' onClick={() => setIsEditAccountOpen(false)}>Hủy</button>
-                            <button className='save' onClick={() => handleSaveEditedAccount(currentEdit)}>Lưu</button>
+                            <button className='save' onClick={() => handleSaveEditedAccount(currentEdit)}><FaSave /></button>
+                            <button className='cancel' onClick={() => setIsEditAccountOpen(false)}><GiCancel /></button>
                         </div>
                     </div>
                 </div>
             )}
         </div>
     );
+
+    function renderPagination() {
+        return (
+            <div className="pagination">
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                    <MdFirstPage />
+                </button>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                    <GrFormPrevious />
+                </button>
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                    <GrFormNext />
+                </button>
+                <button 
+                className='pagination-btn'
+                onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                    <MdLastPage />
+                </button>
+                <select
+                    value={currentPage}
+                    onChange={(e) => handlePageChange(Number(e.target.value))}
+                    className="page-select"
+                >
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+    }
+
 };
+
+
 
 export default AccountManager;
