@@ -1,0 +1,116 @@
+.register-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .register-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1010;
+    width: 400px;
+    h2{
+        font-weight: 500;
+        font-size: 25px;
+        color: #ff953f;
+    }
+  }
+  .form-group-register{
+    .head-input{
+        position: relative;
+        top:20px;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: left;
+        left: 20px;
+        color: #ff953f;
+    }
+
+    input{
+        margin-top: 20px;
+        border-radius: 50px;
+        border: 0.5px solid #ff953f;
+        padding: 10px 14px;
+        padding-right: 50px;
+        font-size: 16px; 
+        width: 90%;
+        &:focus{
+        border: 0.5px solid #ff953f;
+        transform: scale(1);
+        outline: none;
+        box-shadow: 0 0 5px rgba(230, 137, 50, 0.5);
+        transition: border 0.3s, box-shadow 0.3s;
+        }
+        &::placeholder{
+            font-style: italic;
+        }
+    }
+    .icon{
+        position: relative;
+        right:40px;
+        color: #ff953f;
+    }
+  }
+  .close-btn-regi {
+    position: relative;
+    right: 50px;
+    background-color: rgba(0, 0, 0, 0);
+    color:#ed5034;
+    font-weight: 700;
+    border: 0.5px solid #ed5034;
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    &:hover {
+        border: 0.5px solid aqua;
+        border-radius: 10px;
+        transform: scale(1);
+        color: aqua;
+      }
+  }
+  
+  
+  .submit-btn-regi {
+    position: relative;
+    left: 50px;
+    background-color: rgba(0, 0, 0, 0);
+    color:#ff953f;
+    border-radius: 10px;
+    border: 0.5px solid #ff953f;
+    font-weight: 700;
+    padding: 5px 10px;
+    &:hover{
+        transform: scale(1);
+        color: aqua;
+        border-radius: 10px;
+        border: 0.5px solid aqua;
+    }
+  }
+  .switch-line-regi{
+    font-size: 12px;
+    font-style: italic;
+    position: relative;
+    right: 10px;
+    top:10px;
+  }
+  .switch-btn-regi{
+    position: relative;
+    right: 11px;
+    color: #ff953f;
+    &:hover{
+        transform: scale(1);
+        font-style: normal;
+        color: aqua;
+    }
+  }
+  

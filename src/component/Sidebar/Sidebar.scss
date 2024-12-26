@@ -30,5 +30,22 @@
     color: white;
     font-weight: 600;
   }
+  .logout-btn{
+    background-color: rgba(0, 0, 0, 0);
+    color: #ff953f;
+    margin-top: auto; 
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    .icon{
+      font-size: 18px;
+    }
+    &:hover{
+      color: aqua;
+      transform: scale(1);
+    }
+
+  }
 
 }
