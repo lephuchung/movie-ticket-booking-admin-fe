@@ -211,7 +211,7 @@ const Movie = () => {
                 Director: editData.director,
                 PosterUrl: editData.posterUrl,
             };
-            console.log("dâtguirdi", updatedMovie)
+
             await updateNowShowing(editData.id, updatedMovie);
             setData((prevData) => {
                 const updatedData = prevData.map((item) =>

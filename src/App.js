@@ -8,6 +8,7 @@ import Home from './pages/Home/Home';
 import NotFound from './pages/NotFound/NotFound';
 import AccountManager from './pages/AccountManager/AccountManager'
 import PaymentManager from './pages/PaymentManager/PaymentManager'
+import TicketManager from './pages/TicketManager/TicketManager'
 import Login from './pages/Login/Login';
 import { ToastContainer } from 'react-toastify';
 import { useState } from 'react';
@@ -40,6 +41,7 @@ function App() {
               <Route path='/account' element={<AccountManager />} />
               <Route path='/payment' element={<PaymentManager />} />
               <Route path='/showtime' element={<Showtime />} />
+                <Route path='/ticket' element={<TicketManager />} />
               <Route path='/movie' element={<Movie />} />
               <Route path='/' element={<Home />} />
               <Route path='*' element={<NotFound />} />
