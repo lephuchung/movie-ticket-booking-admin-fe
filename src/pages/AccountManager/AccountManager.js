@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './AccountManager.scss';
-import { fetchUser, deleteUser, updateUser } from '../../apis/fetchUser'; 
+import { fetchUser, deleteUser, updateUser } from '../../apis/fetchUser';
 import { MdDeleteOutline } from "react-icons/md";
 import AddAccount from '../../component/Popup/AddAccount';
 import { FaPlusCircle } from "react-icons/fa";
@@ -12,8 +12,11 @@ import { GrFormNext } from "react-icons/gr";
 import { MdLastPage } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
+import { useNavigate } from 'react-router';
 
 const AccountManager = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -29,14 +32,14 @@ const AccountManager = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const users = await fetchUser(); 
+                const users = await fetchUser();
                 const formattedData = users.map((user) => ({
                     id: user.UserId,
                     name: user.Name,
                     email: user.Email,
                     phone: user.Phone,
                     role: user.Role,
-                   createdAt: user.CreateAt,//toLocaleString('vi-VN'), // Chuyển định dạng ngày
+                    createdAt: user.CreateAt,//toLocaleString('vi-VN'), // Chuyển định dạng ngày
                     status: user.Status,
                     password: user.Passdord,
                 }));
@@ -50,7 +53,11 @@ const AccountManager = () => {
         };
 
         fetchData();
-    }, []); 
+    }, []);
+
+    useEffect(() => {
+        if (!localStorage.token) navigate("/login")
+    }, [localStorage.token])
 
     // Lọc dữ liệu theo từ khóa tìm kiếm
     useEffect(() => {
@@ -88,20 +95,20 @@ const AccountManager = () => {
     };
 
     const handleDelete = async (id) => {
-      if (window.confirm(`Bạn có chắc muốn xóa tài khoản với ID: ${id}?`)) {
-          try {
-              await deleteUser(id);
-              setData((prevData) => prevData.filter((item) => item.id !== id));
-  
-              alert('Xóa tài khoản thành công!');
-          } catch (err) {
-              console.error('Lỗi khi xóa tài khoản:', err);
-              alert('Xóa tài khoản thất bại. Vui lòng thử lại.');
-          }
-      }
+        if (window.confirm(`Bạn có chắc muốn xóa tài khoản với ID: ${id}?`)) {
+            try {
+                await deleteUser(id);
+                setData((prevData) => prevData.filter((item) => item.id !== id));
+
+                alert('Xóa tài khoản thành công!');
+            } catch (err) {
+                console.error('Lỗi khi xóa tài khoản:', err);
+                alert('Xóa tài khoản thất bại. Vui lòng thử lại.');
+            }
+        }
     };
 
-    const handleAddAccountSubmit =  (newAccount) => {
+    const handleAddAccountSubmit = (newAccount) => {
         setData((prevData) => [...prevData, {
             id: newAccount.UserId,
             name: newAccount.Name,
@@ -113,9 +120,9 @@ const AccountManager = () => {
         }]);
          window.location.reload();
     };
-    
+
     const handleEditAccount = (account) => {
-        console.log("accedit",account)
+        console.log("accedit", account)
         setCurrentEdit(account);  // Lưu tài khoản cần sửa vào trạng thái
         setIsEditAccountOpen(true);  // Mở popup chỉnh sửa
     };
@@ -126,11 +133,11 @@ const AccountManager = () => {
             // Chuyển đổi dữ liệu về định dạng mới
             const createdAtUTC = new Date(updatedAccount.createdAt); // Chuyển đổi thành đối tượng Date
             const createdAtWith7Hours = new Date(createdAtUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ
-    
+
             // Định dạng lại createdAt theo chuẩn ISO hoặc theo định dạng bạn muốn
             const formattedCreatedAt = createdAtWith7Hours.toISOString(); // Nếu muốn chuẩn ISO
             // const formattedCreatedAt = createdAtWith7Hours.toLocaleString('vi-VN'); // Hoặc định dạng theo 'vi-VN' nếu cần
-    
+
             const formattedAccount = {
                 Name: updatedAccount.name,
                 Email: updatedAccount.email,
@@ -140,9 +147,9 @@ const AccountManager = () => {
                 Status: updatedAccount.status,
                 Password: updatedAccount.password,
             };
-    
+
             console.log("formattedAccount:", formattedAccount);
-    
+
             // Cập nhật thông tin tài khoản qua API
             await updateUser(updatedAccount.id, formattedAccount);  
             // window.location.reload();
@@ -153,16 +160,16 @@ const AccountManager = () => {
                     item.id === updatedAccount.id ? { ...item, ...updatedAccount } : item
                 )
             );
-    
+
             // Đóng popup sau khi lưu
             setIsEditAccountOpen(false);
-    
+
         } catch (err) {
             console.error('Lỗi khi cập nhật tài khoản:', err);
             alert('Cập nhật tài khoản thất bại.');
         }
     };
-    
+
 
     const columns = React.useMemo(
         () => [
@@ -196,11 +203,11 @@ const AccountManager = () => {
                 Cell: ({ value }) => {
                     const createDateUTC = new Date(value); // Chuyển chuỗi ISO thành đối tượng Date
                     const createDateUTC7 = new Date(createDateUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ để chuyển sang UTC+7
-    
+
                     // Định dạng lại thành ngày/giờ (VD: 25/04/2019 17:00)
                     const formattedDate = createDateUTC7.toLocaleDateString('vi-VN'); // Chỉ lấy ngày
                     const formattedTime = createDateUTC7.toLocaleTimeString('vi-VN').slice(0, 5); // Chỉ lấy giờ
-    
+
                     return `${formattedDate} ${formattedTime}`;
                 },
             },
@@ -271,11 +278,11 @@ const AccountManager = () => {
                 </table>
                 {renderPagination()}
             </div>
-            
+
             <button className="add-account-button" onClick={() => setIsAddAccountOpen(true)}>
-                    <FaPlusCircle />
-                </button>
-                <AddAccount
+                <FaPlusCircle />
+            </button>
+            <AddAccount
                 isOpen={isAddAccountOpen}
                 onClose={() => setIsAddAccountOpen(false)}
                 onSubmit={handleAddAccountSubmit}
@@ -355,27 +362,27 @@ const AccountManager = () => {
     function renderPagination() {
         return (
             <div className="pagination">
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
                     <MdFirstPage />
                 </button>
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                     <GrFormPrevious />
                 </button>
                 <span>
                     Trang {currentPage}/{totalPages}
                 </span>
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                     <GrFormNext />
                 </button>
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
                     <MdLastPage />
                 </button>
                 <select

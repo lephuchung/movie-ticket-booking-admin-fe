@@ -9,8 +9,11 @@ import { MdFirstPage } from "react-icons/md";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
 import { MdLastPage } from "react-icons/md";
+import { useNavigate } from 'react-router';
 
 const PaymentManager = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -55,13 +58,17 @@ const PaymentManager = () => {
     }, []); // Chạy một lần khi component mount
 
     useEffect(() => {
-        const filtered = data.filter((item) => 
+        const filtered = data.filter((item) =>
             item.CustomerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.PaymentId.toString().includes(searchQuery) // Tìm kiếm theo ID thanh toán
         );
         setFilteredData(filtered);
         setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
     }, [searchQuery, data]);
+
+    useEffect(() => {
+        if (!localStorage.token) navigate("/login")
+    }, [localStorage.token])
 
     // Format tiền tệ
     const formatAmount = (amount) => {
@@ -71,15 +78,15 @@ const PaymentManager = () => {
     // Format thời gian
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleString('vi-VN'); 
+        return date.toLocaleString('vi-VN');
     };
 
     // Xử lý khi thanh toán
     const handlePayment = (id) => {
         setData(data.map(item =>
             item.PaymentId === id
-            ? { ...item, PaymentStatus: 'Đã thanh toán' }
-            : item
+                ? { ...item, PaymentStatus: 'Đã thanh toán' }
+                : item
         ));
     };
 
@@ -205,27 +212,27 @@ const PaymentManager = () => {
     function renderPagination() {
         return (
             <div className="pagination">
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
                     <MdFirstPage />
                 </button>
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                     <GrFormPrevious />
                 </button>
                 <span>
                     Trang {currentPage}/{totalPages}
                 </span>
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                     <GrFormNext />
                 </button>
-                <button 
-                className='pagination-btn'
-                onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                <button
+                    className='pagination-btn'
+                    onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
                     <MdLastPage />
                 </button>
                 <select

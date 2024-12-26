@@ -16,8 +16,11 @@ import { FaSave } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import '../../style/search.scss';
 import '../../style/pagination.scss';
+import { useNavigate } from 'react-router';
 
 const Movie = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -43,7 +46,7 @@ const Movie = () => {
                     title: movie.Title,
                     description: movie.Description,
                     genre: movie.Genre,
-                    releaseDate: movie.ReleaseDate, 
+                    releaseDate: movie.ReleaseDate,
                     rating: movie.Rating,
                     duration: movie.Duration,
                     director: movie.Director,
@@ -76,46 +79,46 @@ const Movie = () => {
 
     const columns = React.useMemo(
         () => [
-        {
-            Header: 'STT',
-            accessor: (row, rowIndex) => rowIndex + 1,
-        },
-        {
-            Header: 'ID',
-            accessor: 'id',
-        },
-        {
-            Header: 'Tên Phim',
-            accessor: 'title',
-        },
-        {
-            Header: 'Ra mắt',
-            accessor: 'releaseDate',
-            Cell: ({ value }) => {
-            
-                const releaseDateUTC = new Date(value); // Chuyển chuỗi ISO thành đối tượng Date
-
-                const formattedDate = releaseDateUTC.toLocaleDateString('vi-VN'); // Chỉ lấy ngày
-                const formattedTime = releaseDateUTC.toLocaleTimeString('vi-VN').slice(0, 5); // Chỉ lấy giờ
-
-                return `${formattedDate} ${formattedTime}`;
+            {
+                Header: 'STT',
+                accessor: (row, rowIndex) => rowIndex + 1,
             },
-        },
-        {
-            Header: 'Đánh giá',
-            accessor: 'rating',
-        },
-        {
-            Header: 'Hành động',
-            Cell: ({ row }) => (
-            <div>
-                <button className="detail" onClick={() => handleDetails(row.original)}><BiDetail /></button>
-                <button className="edit" onClick={() => openEditPopup(row.original)}><FaScrewdriverWrench /></button>
-                {/* <button className="delete" onClick={() => handleDelete(row.original)}>Xóa</button> */}
-                <button className="add" onClick={() => handleAddShow(row.values.id)}><FaRegCalendarPlus /></button>
-            </div>
-            ),
-        },
+            {
+                Header: 'ID',
+                accessor: 'id',
+            },
+            {
+                Header: 'Tên Phim',
+                accessor: 'title',
+            },
+            {
+                Header: 'Ra mắt',
+                accessor: 'releaseDate',
+                Cell: ({ value }) => {
+
+                    const releaseDateUTC = new Date(value); // Chuyển chuỗi ISO thành đối tượng Date
+
+                    const formattedDate = releaseDateUTC.toLocaleDateString('vi-VN'); // Chỉ lấy ngày
+                    const formattedTime = releaseDateUTC.toLocaleTimeString('vi-VN').slice(0, 5); // Chỉ lấy giờ
+
+                    return `${formattedDate} ${formattedTime}`;
+                },
+            },
+            {
+                Header: 'Đánh giá',
+                accessor: 'rating',
+            },
+            {
+                Header: 'Hành động',
+                Cell: ({ row }) => (
+                    <div>
+                        <button className="detail" onClick={() => handleDetails(row.original)}><BiDetail /></button>
+                        <button className="edit" onClick={() => openEditPopup(row.original)}><FaScrewdriverWrench /></button>
+                        {/* <button className="delete" onClick={() => handleDelete(row.original)}>Xóa</button> */}
+                        <button className="add" onClick={() => handleAddShow(row.values.id)}><FaRegCalendarPlus /></button>
+                    </div>
+                ),
+            },
         ],
         [currentPage, rowsPerPage]
     );
@@ -125,7 +128,7 @@ const Movie = () => {
             setCurrentPage(page);
         }
     };
-    
+
 
     const paginatedData = React.useMemo(() => {
         const filtered = data.filter(movie =>
@@ -136,7 +139,7 @@ const Movie = () => {
         const endIndex = startIndex + rowsPerPage;
         return filtered.slice(startIndex, endIndex);
     }, [data, searchQuery, currentPage, rowsPerPage]);
-    
+
 
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
@@ -174,7 +177,7 @@ const Movie = () => {
             Đạo diễn: ${row.director}\n
             Poster: ${row.posterUrl}\n`);
     };
-    
+
 
 
     const handleDelete = async (row) => {
@@ -182,7 +185,7 @@ const Movie = () => {
         if (window.confirm(`Bạn có chắc muốn xóa phim "${row.title}" không?`)) {
             try {
                 await deleteNowShowing(row.id); // Gọi API để xóa phim với ID của row
-                
+
                 // Cập nhật lại dữ liệu sau khi xóa
 
                 setData((prevData) => prevData.filter((item) => item.id !== row.id));
@@ -194,7 +197,7 @@ const Movie = () => {
     };
 
     const handleSave = async () => {
-        console.log("editdata",editData)
+        console.log("editdata", editData)
         try {
             const releaseDateUTC = new Date(editData.releaseDate); // Chuyển thành đối tượng Date
             const releaseDateWith7Hours = new Date(releaseDateUTC.getTime() + 7 * 60 * 60 * 1000); // Cộng thêm 7 giờ
@@ -208,7 +211,7 @@ const Movie = () => {
                 Director: editData.director,
                 PosterUrl: editData.posterUrl,
             };
-   
+
             await updateNowShowing(editData.id, updatedMovie);
             setData((prevData) => {
                 const updatedData = prevData.map((item) =>
@@ -217,7 +220,7 @@ const Movie = () => {
                 return updatedData;
             });
             setRefreshData(prev => !prev);
-    
+
             closeEditPopup();
         } catch (error) {
             console.error('Lỗi khi cập nhật phim:', error);
@@ -228,8 +231,8 @@ const Movie = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditData((prevData) => ({
-        ...prevData,
-        [name]: value,
+            ...prevData,
+            [name]: value,
         }));
     };
 
@@ -253,6 +256,10 @@ const Movie = () => {
         data: paginatedData,
     });
 
+    useEffect(() => {
+        if (!localStorage.token) navigate("/login")
+    }, [localStorage.token])
+
     return (
         <div className='page-container-movie'>
             <h1 className='page-title'>Quản lý phim</h1>
@@ -268,25 +275,25 @@ const Movie = () => {
                 </div>
                 <table {...getTableProps()} className="movie-table">
                     <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                ))}
+                            </tr>
                         ))}
-                        </tr>
-                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map(cell => (
-                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                            ))}
-                        </tr>
-                        );
-                    })}
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
                 <div className='pagination'>
@@ -343,97 +350,97 @@ const Movie = () => {
                     onClose={() => setIsAddPopupOpen(false)}
                     onSubmit={handleAddFilm}
                 />
-               {isEditPopupOpen && (
-                <div className="popup-movie-edit-container">
-                    <div className="popup-movie-edit-content">
-                        <form className="movie-edit-form">
-                            <div className="form-group">
-                                <label>ID:</label>
-                                <input type="text" value={editData.id} disabled />
-                            </div>
-                            <div className="form-group">
-                                <label>Tên phim:</label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={editData.title}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Mô tả:</label>
-                                <textarea
-                                    name="description"
-                                    value={editData.description}
-                                    onChange={handleInputChange}
-                                    className="wide-input"  
-                                />
+                {isEditPopupOpen && (
+                    <div className="popup-movie-edit-container">
+                        <div className="popup-movie-edit-content">
+                            <form className="movie-edit-form">
+                                <div className="form-group">
+                                    <label>ID:</label>
+                                    <input type="text" value={editData.id} disabled />
+                                </div>
+                                <div className="form-group">
+                                    <label>Tên phim:</label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={editData.title}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Mô tả:</label>
+                                    <textarea
+                                        name="description"
+                                        value={editData.description}
+                                        onChange={handleInputChange}
+                                        className="wide-input"
+                                    />
 
-                            </div>
-                            <div className="form-group">
-                                <label>Thể loại:</label>
-                                <input
-                                    type="text"
-                                    name="genre"
-                                    value={editData.genre}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Ngày phát hành:</label>
-                                <input
-                                    type="datetime-local"
-                                    name="releaseDate"
-                                    value={editData.releaseDate}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Đánh giá:</label>
-                                <input
-                                    type="number"
-                                    name="rating"
-                                    value={editData.rating}
-                                    min="0"
-                                    max="10"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Thời lượng (phút):</label>
-                                <input
-                                    type="number"
-                                    name="duration"
-                                    value={editData.duration}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Đạo diễn:</label>
-                                <input
-                                    type="text"
-                                    name="director"
-                                    value={editData.director}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>URL Poster:</label>
-                                <input
-                                    type="text"
-                                    name="posterUrl"
-                                    value={editData.posterUrl}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="form-actions">
-                                <button className='save-btn'type="button" onClick={handleSave}><FaSave /></button>
-                                <button className='cancel-btn'type="button" onClick={closeEditPopup}><GiCancel /></button>
-                            </div>
-                        </form>
+                                </div>
+                                <div className="form-group">
+                                    <label>Thể loại:</label>
+                                    <input
+                                        type="text"
+                                        name="genre"
+                                        value={editData.genre}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Ngày phát hành:</label>
+                                    <input
+                                        type="datetime-local"
+                                        name="releaseDate"
+                                        value={editData.releaseDate}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Đánh giá:</label>
+                                    <input
+                                        type="number"
+                                        name="rating"
+                                        value={editData.rating}
+                                        min="0"
+                                        max="10"
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Thời lượng (phút):</label>
+                                    <input
+                                        type="number"
+                                        name="duration"
+                                        value={editData.duration}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Đạo diễn:</label>
+                                    <input
+                                        type="text"
+                                        name="director"
+                                        value={editData.director}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>URL Poster:</label>
+                                    <input
+                                        type="text"
+                                        name="posterUrl"
+                                        value={editData.posterUrl}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="form-actions">
+                                    <button className='save-btn' type="button" onClick={handleSave}><FaSave /></button>
+                                    <button className='cancel-btn' type="button" onClick={closeEditPopup}><GiCancel /></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
 
 
@@ -442,7 +449,7 @@ const Movie = () => {
                         isOpen={isAddShowPopupOpen}
                         onClose={() => setIsAddShowPopupOpen(false)}
                         onSubmit={handleAddShowSubmit}
-                        movieId={currentMovieId} 
+                        movieId={currentMovieId}
                     />
                 )}
             </div>

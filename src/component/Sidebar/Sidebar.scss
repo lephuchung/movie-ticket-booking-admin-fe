@@ -1,51 +1,75 @@
 .sidebar {
-    width: 200px;
-    height: 100vh;
-    overflow: hidden;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-  
+  width           : 200px;
+  height          : 100vh;
+  overflow        : hidden;
+  background-color: #fff;
+  display         : flex;
+  flex-direction  : column;
+  text-align      : left;
+
   a {
-    float: left;
-    color: #493d3d;    
-    padding: 14px 16px;
+    float          : left;
+    color          : #493d3d;
+    padding        : 14px 16px;
     text-decoration: none;
-    font-size: 16px;
-    border-radius:  6px;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-    font-weight: 500;
+    font-size      : 16px;
+    border-radius  : 6px;
+    margin-top     : 10px;
+    margin-left    : 10px;
+    margin-right   : 10px;
+    font-weight    : 500;
   }
-  
+
   a:hover {
     background-color: #ddd;
-    color: black;
+    color           : black;
   }
-  
+
   a.active {
     background-color: #ff953f;
-    color: white;
-    font-weight: 600;
+    color           : white;
+    font-weight     : 600;
   }
-  .logout-btn{
+
+  .logout-btn {
     background-color: rgba(0, 0, 0, 0);
-    color: #ff953f;
-    margin-top: auto; 
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 500;
-    .icon{
+    color           : #ff953f;
+    margin-top      : auto;
+    margin-bottom   : 20px;
+    text-align      : center;
+    font-size       : 16px;
+    font-weight     : 500;
+
+    .icon {
       font-size: 18px;
     }
-    &:hover{
-      color: aqua;
+
+    &:hover {
+      color    : aqua;
       transform: scale(1);
     }
 
+  }
+
+  .login-btn {
+    background-color: rgba(0, 0, 0, 0.1);
+    color           : #ff953f;
+    margin-top      : auto;
+    margin-bottom   : 20px;
+    text-align      : center;
+    font-size       : 16px;
+    font-weight     : 500;
+
+    a:hover {
+      background-color: #ddd;
+      color           : black;
+    }
+
+    a.active {
+      background-color: #ff953f;
+      color           : white;
+      font-weight     : 600;
+    }
   }
 
 }

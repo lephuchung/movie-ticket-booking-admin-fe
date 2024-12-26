@@ -2,8 +2,12 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import "./Sidebar.scss"
 import { IoLogOut } from "react-icons/io5";
+import { signOut } from '../../apis/auth';
 
-const Sidebar = () => {
+const Sidebar = ({ isSignedIn, setIsSignedIn }) => {
+    const handleSignout = () => {
+        signOut();
+    }
     return (
         <div className="sidebar">
             <img src="/logo.png" alt="Logo" />
@@ -13,9 +17,14 @@ const Sidebar = () => {
             <NavLink to={"/account"}>Quản lý tài khoản</NavLink>
             <NavLink to={"/payment"}>Quản lý thanh toán</NavLink>
             <NavLink to={"/ticket"}>Quản lý vé</NavLink>
-            <button className="logout-btn">
-                Đăng xuất <IoLogOut className='icon'/>
-            </button>
+            {isSignedIn
+                ? <button className="logout-btn" onClick={() => { handleSignout() }}>
+                    Đăng xuất <IoLogOut className='icon' />
+                </button>
+                : <NavLink to="/login" activeClassName="active" className="login-btn">
+                    Đăng nhập
+                </NavLink>
+            }
         </div>
     )
 }
